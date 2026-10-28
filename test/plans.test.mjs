@@ -83,7 +83,7 @@ test('menus contain only provider plans and allowed models, with Max priority Op
    assert.deepEqual(el(provider+'-plan').children.map(o=>o.value),plans);
    for(const plan of plans){el(provider+'-plan').value=plan;el(provider+'-plan').handlers.change();assert.deepEqual(el(provider+'-model').children.map(o=>o.value),planModels[provider][plan]);}
  }
- assert.deepEqual(el('claude-model').children.map(o=>o.textContent),['Opus','Fable','Sonnet']);
+ assert.deepEqual(el('claude-model').children.map(o=>o.textContent),['Opus 5.5','Fable 5.1','Sonnet 5.5']);
  el('codex-plan').value='free';el('codex-plan').handlers.change();assert.deepEqual(el('codex-effort').children.map(o=>o.value),['medium']);assert.equal(el('codex-fast').disabled,true);
 });
 

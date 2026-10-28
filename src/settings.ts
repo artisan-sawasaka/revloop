@@ -8,8 +8,8 @@ import type { Provider } from './types.js';
 import { profilePlans, requirePlanModel, requireCliPlan } from './plans.js';
 
 export const efforts = ['low','medium','high','xhigh','max'] as const;
-export const codexModelOptions = [{model:'gpt-6-astra',label:'Astra'},{model:'gpt-6.1-sol',label:'6.1 Sol'},{model:'gpt-6-luna',label:'Luna'},{model:'gpt-6.1-terra',label:'Terra'}] as const;
-export const claudeModelOptions = [{model:'opus',label:'Opus'},{model:'sonnet',label:'Sonnet'},{model:'fable',label:'Fable'}] as const;
+export const codexModelOptions = [{model:'gpt-6-astra',label:'Astra 6'},{model:'gpt-6.1-sol',label:'Sol 6.1'},{model:'gpt-6-luna',label:'Luna 6'},{model:'gpt-6.1-terra',label:'Terra 6.1'}] as const;
+export const claudeModelOptions = [{model:'opus',label:'Opus 5.5'},{model:'sonnet',label:'Sonnet 5.5'},{model:'fable',label:'Fable 5.1'}] as const;
 export type Effort = typeof efforts[number];
 export interface ReviewerSettings { model: string; effort: Effort; fast?:boolean }
 export interface LoopSettings { maxRounds: number; stallLimit: number; timeoutSeconds: number }
