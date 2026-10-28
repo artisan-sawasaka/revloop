@@ -85,7 +85,7 @@ test('real Codex adapter checks live catalog before sending Fast and records exp
  const settings=defaults();settings.planProfiles.codex.plus={model:'gpt-6-astra',effort:'medium',fast:true};await saveSettings(settings,revisionOf(await readSettings()));
  const run=await start(root,{source:'claude',title:'Fast fixture',context:'fixture',files:['x.ts']});
  const invoke=env=>{const r=spawnSync(process.execPath,[path.resolve('dist/cli.js'),'review','--root',root,'--run',run.id],{encoding:'utf8',windowsHide:true,env:{...process.env,REVLOOP_CODEX_PATH:fake,FAKE_LOG:log,...env}});return JSON.parse(r.stdout);};
- const first=invoke({FAKE_FAST:'1',FAKE_FAIL:'1'});assert.equal(first.status,'NEEDS_FIX',JSON.stringify(first));assert.equal(first.rounds[0].reviewerSettings.fast,true);
+ const first=invoke({FAKE_FAST:'1',FAKE_FAIL:'1'});assert.equal(first.status,'NEEDS_FIX',JSON.stringify(first));assert.equal(first.rounds[0].reviewerSettings.fast,true);assert.equal(first.rounds[0].quotaUsage.before[0].usedPercent,1);assert.equal(first.rounds[0].quotaUsage.after[0].usedPercent,1);
  settings.planProfiles.codex.plus.fast=false;await saveSettings(settings,revisionOf(await readSettings()));await writeFile(path.join(root,'x.ts'),'v2');
  const second=invoke({FAKE_FAST:'1'});assert.equal(second.status,'PASS',JSON.stringify(second));
  const args=(await readFile(log,'utf8')).trim().split('\n').map(JSON.parse);assert.ok(args[0].includes('service_tier="fast"'));assert.ok(args[1].includes('service_tier="default"'));assert.ok(args[1].includes('resume'));

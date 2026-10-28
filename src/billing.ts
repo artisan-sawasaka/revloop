@@ -1,3 +1,4 @@
+import { codexQuotaWindows, type QuotaWindow } from './quota-usage.js';
 import { codexMetadata } from './codex-rpc.js';
 import { subscriptionEnv } from './process.js';
 import { readClaudeSubscription, CLAUDE_USAGE_VERSION, claudeSubscriptionPlans, ClaudeAuthError } from './claude-usage.js';
@@ -11,6 +12,7 @@ export interface BillingReport {
   evidence: string[]; confirmationExpiresAt?: string;
   reasons: string[];
   warnings?:string[];
+  quotaWindows?:QuotaWindow[];
   observations: { quotaUsedPercent: number[]; creditBalance: string | null; hasCredits: boolean | null; autoReloadEnabled: boolean | null; paidUsageDisabled: boolean | null };
 }
 const object = (v: unknown): v is Record<string,unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
@@ -33,6 +35,7 @@ export function assessBilling(provider: Provider, raw?: unknown, confirmation?: 
     }
   } else if(provider==='codex') {
     if(!object(raw)){r.reasons.push('USAGE_STATUS_UNAVAILABLE');return r;}
+    r.quotaWindows=codexQuotaWindows(raw);
     r.accountFingerprint=codexFingerprint(raw.accountId);
     if(!r.accountFingerprint)r.reasons.push('ACCOUNT_IDENTITY_UNKNOWN');
     if(raw.authType!=='chatgpt'||typeof raw.authenticatedPlan!=='string'||!supportedPlans.includes(raw.authenticatedPlan))r.reasons.push('SUPPORTED_SUBSCRIPTION_AUTH_REQUIRED');

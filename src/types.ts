@@ -1,3 +1,5 @@
+import type { QuotaUsage } from './quota-usage.js';
+import type { TokenUsage } from './token-usage.js';
 import type { BillingReport } from './billing.js';
 import type { ReviewerSettings } from './settings.js';
 export type Provider = 'claude' | 'codex';
@@ -6,7 +8,7 @@ export interface Finding { severity: 'P0' | 'P1' | 'P2' | 'P3'; file: string; li
 export interface VisualResult {status:'REVIEWED'|'NOT_RUN';observations:{file:string;observation:string}[]}
 export interface Review { verdict: 'PASS' | 'FAIL' | 'BLOCKED'; summary: string; findings: Finding[]; notes?:string[]; visual?:VisualResult }
 export interface ReviewDecision {reportedVerdict:Review['verdict'];effectiveVerdict:Review['verdict'];warnings:string[]}
-export interface Round { number: number; fingerprint: string; findingKey?: string; review?: Review; decision?:ReviewDecision; sessionId?: string; error?: string; startedAt: string; finishedAt?: string; reviewerSettings?: ReviewerSettings; reviewerPlan?:string; visualReview?:{status:'REVIEWED'|'NOT_RUN';images:string[];reason?:string} }
+export interface Round { quotaUsage?:QuotaUsage; tokenUsage?:TokenUsage; number: number; fingerprint: string; findingKey?: string; review?: Review; decision?:ReviewDecision; sessionId?: string; error?: string; startedAt: string; finishedAt?: string; reviewerSettings?: ReviewerSettings; reviewerPlan?:string; visualReview?:{status:'REVIEWED'|'NOT_RUN';images:string[];reason?:string} }
 export interface State {
   version: 1; id: string; root: string; source: Provider; reviewer: Provider;
   sourceSession?: string; title: string; reviewerSession?: string;

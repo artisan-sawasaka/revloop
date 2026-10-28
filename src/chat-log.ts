@@ -1,3 +1,5 @@
+import { formatQuotaUsage } from './quota-usage.js';
+import { formatTokenUsage } from './token-usage.js';
 import { readSettings } from './settings.js';
 import { assessReview, reviewCount, type State } from './types.js';
 import { buildHaltReport } from './halt.js';
@@ -15,6 +17,8 @@ export function formatChatLog(s: State): string {
       rows.push(`累計${r.number}回目: レビュー判定 ${verdict} / 指摘${r.review.findings.length}件${r.finishedAt?'':' / 未完了'}`);
       for (const f of r.review.findings) rows.push(`  ${f.severity} ${JSON.stringify(f.file)}:${f.line} ${JSON.stringify(f.message)}`);
     } else rows.push(`累計${r.number}回目: ${r.error?'ERROR':'未完了'} / レビュー結果なし`);
+    rows.push('  '+formatTokenUsage(r.tokenUsage));
+    rows.push(...formatQuotaUsage(r.quotaUsage).map(line=>'  '+line));
     if (r.error) rows.push(`  エラー: ${JSON.stringify(r.error)}`);
   }
   const reason=buildHaltReport(s)?.reason??s.reason;

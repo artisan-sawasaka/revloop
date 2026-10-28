@@ -75,6 +75,7 @@ export async function review(root: string, id: string, reviewer: Reviewer = invo
     await safeDir(s.reviewerCwd); await writeFile(path.join(s.reviewerCwd,'input.json'),snap.input);
     await event(dir,{type:'review-start',round:round.number,fingerprint:snap.fingerprint});
     const result = await reviewer(s,roundDir,stopFile);
+    if(result.tokenUsage)round.tokenUsage=result.tokenUsage;
     const knownFiles = new Set<string>(JSON.parse(snap.input).files.map((f: { path: string }) => f.path));
     for (const finding of result.review.findings) if (!knownFiles.has(finding.file)) throw new Error(`Reviewer finding refers outside the supplied scope: ${finding.file}`);
     round.review = result.review; round.sessionId = result.sessionId; round.finishedAt = new Date().toISOString();

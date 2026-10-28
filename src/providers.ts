@@ -1,15 +1,17 @@
+import { claudeQuotaWindows } from './quota-usage.js';
+import { readTokenUsage, type TokenUsage } from './token-usage.js';
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { checkProcess, resolveCommand, runProcess, subscriptionEnv, type ProcessResult } from './process.js';
 import { reviewCount, parseReview, reviewSchema, visualReviewSchema, type Provider, type Review, type State } from './types.js';
 import { uuid } from './storage.js';
-import { requireIncludedBilling, requireSameAccount, BillingSafetyError } from './billing.js';
+import { requireIncludedBilling, requireSameAccount, BillingSafetyError, checkBilling } from './billing.js';
 import { profilePlan, requirePlanModel } from './plans.js';
 import { claudeEnv } from './claude-usage.js';
 import { codexModels, defaults, readSettings, requireModelChoice, validateReviewer, selectReviewerSettings } from './settings.js';
 import {loadImages,imageCopyPath,claudeImageInput,type SnapshotImage} from './images.js';
 export { codexMetadata } from './codex-rpc.js';
-export interface ProviderResult { review: Review; sessionId: string }
+export interface ProviderResult { tokenUsage?:TokenUsage; review: Review; sessionId: string }
 export async function doctor(provider: Provider, cwd: string, stopFile?: string,visual=false,fast=false): Promise<{ provider: Provider; version: string; auth: string; inference: string }> {
   const env = subscriptionEnv(provider), cmd = resolveCommand(provider);
   const version = await runProcess(cmd,['--version'],{cwd,env,stopFile}); checkProcess(version);
@@ -40,7 +42,7 @@ export function providerArgs(s: State, schemaPath: string,images:SnapshotImage[]
     if (s.reviewerSession) common.push('resume',s.reviewerSession);
     return [...common,'--model',setting.model,'-c',`model_reasoning_effort="${setting.effort}"`,'-c',`service_tier="${setting.fast===true?'fast':'default'}"`,'-c',`features.fast_mode=${setting.fast===true}`,'--json','--output-schema',schemaPath,...images.flatMap(i=>['--image',imageCopyPath(path.dirname(schemaPath),i.image)]),'-'];
   }
-  const args = ['-p','--safe-mode','--restricted','--strict-mcp-config','--tools','','--permission-mode','dontAsk','--model',setting.model,'--effort',setting.effort,'--output-format',images.length?'stream-json':'json','--json-schema',JSON.stringify(images.length?visualReviewSchema:reviewSchema),...(images.length?['--input-format','stream-json','--verbose']:[])];
+  const args = ['-p','--safe-mode','--restricted','--strict-mcp-config','--tools','','--permission-mode','dontAsk','--model',setting.model,'--effort',setting.effort,'--output-format','stream-json','--verbose','--json-schema',JSON.stringify(images.length?visualReviewSchema:reviewSchema),...(images.length?['--input-format','stream-json']:[])];
   return [...args,...(s.reviewerSession ? ['--resume',s.reviewerSession] : ['--name',s.title])];
 }
 export function decodeResult(provider: Provider, raw: ProcessResult, expectedSession?: string,requireVisual=false): ProviderResult {
@@ -56,9 +58,9 @@ export function decodeResult(provider: Provider, raw: ProcessResult, expectedSes
   let sessionId: string, value: unknown;
   if (provider === 'claude') {
     let result;
-    if(requireVisual) {
+    if(requireVisual || raw.stdout.trim().split(/\r?\n/).length>1) {
       const results=raw.stdout.trim().split(/\r?\n/).map(line=>JSON.parse(line)).filter(e=>e.type==='result');
-      if(results.length!==1)throw Error('Claude image review did not return exactly one result');
+      if(results.length!==1)throw Error('Claude review did not return exactly one result');
       result=results[0];
     }else result=JSON.parse(raw.stdout);
     if (result.type !== 'result' || result.is_error !== false || result.subtype !== 'success' || result.terminal_reason === 'api_error') throw new Error(`Claude failed: ${String(result.result ?? result.subtype).slice(0,1200)}`);
@@ -73,7 +75,8 @@ export function decodeResult(provider: Provider, raw: ProcessResult, expectedSes
   }
   if (typeof sessionId !== 'string' || !uuid.test(sessionId)) throw new Error('Reviewer did not return a valid session ID');
   if (expectedSession && sessionId !== expectedSession) throw new Error('Reviewer session changed unexpectedly');
-  return { sessionId, review:parseReview(value,requireVisual) };
+  const tokenUsage=readTokenUsage(provider,raw.stdout);
+  return { sessionId, review:parseReview(value,requireVisual),...(tokenUsage?{tokenUsage}:{}) };
 }
 export async function invokeReviewer(s: State, roundDir: string, stopFile: string): Promise<ProviderResult> {
   const setting=validateReviewer(s.reviewer,s.reviewerSettings??selectReviewerSettings(await readSettings(),s.reviewer,s.reviewerPlan));
@@ -110,6 +113,20 @@ BEGIN SNAPSHOT JSON DATA\n${input}\nEND SNAPSHOT JSON DATA`;
   await writeFile(path.join(roundDir,'billing-check.json'),JSON.stringify(billing,null,2));
   const request=s.reviewer==='claude'&&images.length?claudeImageInput(prompt,images,s.reviewerSession):prompt;
   const result = await runProcess(resolveCommand(s.reviewer),args,{cwd:s.reviewerCwd,input:request,timeoutMs:s.timeoutMs,stopFile,env:s.reviewer==='claude'?{...claudeEnv(),CLAUDE_CODE_EFFORT_LEVEL:setting.effort}:subscriptionEnv('codex')});
+  const tokenUsage=readTokenUsage(s.reviewer,result.stdout);
+  const round=s.rounds.at(-1);if(round&&tokenUsage)round.tokenUsage=tokenUsage;
+  if(round){
+    if(s.reviewer==='claude'){
+      const previous=s.rounds.at(-2);
+      round.quotaUsage={approximate:true,before:previous?.reviewerPlan===s.reviewerPlan?previous?.quotaUsage?.after??[]:[],after:claudeQuotaWindows(result.stdout)};
+    }else{
+      round.quotaUsage={approximate:true,before:s.billing?.quotaWindows??[],after:[]};
+      try {
+        const after=await checkBilling('codex',process.cwd(),stopFile);
+        if(after.accountFingerprint===s.billing?.accountFingerprint&&after.plan===s.billing?.plan)round.quotaUsage.after=after.quotaWindows??[];
+      }catch{/* Optional display failure never changes the review verdict or weakens preflight guards. */}
+    }
+  }
   await writeFile(path.join(roundDir,'stdout.txt'),result.stdout); await writeFile(path.join(roundDir,'stderr.txt'),result.stderr);
   await writeFile(path.join(roundDir,'process.json'),JSON.stringify({code:result.code,failure:result.failure},null,2));
   return decodeResult(s.reviewer,result,s.reviewerSession,images.length>0);
