@@ -2,7 +2,7 @@
 
 ## 現在の方針（2026-10-19更新）
 
-所有者の「/usageがタイムアウトするため、このチェックを外して」という指示により、Claudeのレビュー開始条件から `/usage` 診断を外した。`billing-check --provider claude` と各レビュー前の確認は `claude auth status` だけを使う。claude.ai / firstParty / Max、APIキー等のルーティング競合なし、同一アカウントを検証する。Fast無効とOpus指定は維持する。
+所有者の「/usageがタイムアウトするため、このチェックを外して」という指示により、Claudeのレビュー開始条件から `/usage` 診断を外した。`billing-check --provider claude` と各レビュー前の確認は `claude auth status` だけを使う。claude.ai / firstParty / ProまたはMax、APIキー等のルーティング競合なし、同一アカウントを検証する。ClaudeのFast無効を維持し、認証されたプランの設定でOpus／Sonnet、MaxではFableも指定できる。Max専用のFable枠を利用し、追加利用OFFを維持する。枠の残量・追加利用OFFは自動検査しない。
 
 Claudeのpolicyは `subscription-auth-only`。quotaUsedPercent=[]、paidUsageDisabled=nullとし、追加利用OFFや残量を確認したとは記録しない。warningsに未確認と、Claude側で追加利用OFFを維持する必要があることを記録する。サブスク認証だけでは追加利用の消費を防げないため、追加利用ONの場合の従量利用ゼロは保証しない。上限や認証エラーをCLIが返した場合は従来どおり停止し、別の課金方式へ切り替えない。
 
@@ -12,12 +12,18 @@ Codexの残量・残高0・自動補充OFF確認は変更していない。現�
 
 公式根拠: [Claudeのusage credits](https://support.claude.com/en/articles/12429409-manage-usage-credits-for-paid-claude-plans) は、追加利用を有効にした場合、サブスク上限後に従量利用へ移行すること、無効時はプラン内の利用のみになることを説明している。
 
+### プラン別Fast設定（2026-10-28）
+
+CodexのFastは、モデル一覧がFast対応を明示した場合だけ許可する。各プランの設定に保存し、実行前に再検査する。OFFでは再レビュー時もStandardを明示する。残量・残高0・自動補充OFFの確認は省略しない。[公式Speed案内](https://learn.chatgpt.com/docs/agent-configuration/speed)ではFastはサブスク枠を通常の2.5倍消費する。Ultrafastは対象外。
+
+Claude FastはPro／Maxでも追加クレジット専用のため、画面でONを無効にし、設定ファイル・API・実行引数からも拒否する。`CLAUDE_CODE_DISABLE_FAST_MODE=1` は引き続き設定する。[公式Fast案内](https://code.claude.com/docs/en/fast-mode)
+
 ### 現行の判定条件
 
 | レビュアー | 実行前に確認するもの | 確認しないもの |
 |---|---|---|
-| Claude | claude.ai / firstParty / Max、API・他プロバイダーへの競合設定なし、同一アカウント | /usage、残量、追加利用OFF、追加クレジット残高 |
-| Codex | ChatGPT個人Plus/Pro/ProLite、同一アカウント、有効な残量枠が全て100%未満、credit残高0・hasCredits=false・unlimited=false、上限/支出制限未到達、自動補充OFFの24時間有効なユーザー確認 | 自動補充OFF設定そのものの自動取得（ユーザー確認に依存） |
+| Claude | claude.ai / firstParty / ProまたはMax、API・他プロバイダーへの競合設定なし、同一アカウント | /usage、残量、追加利用OFF、追加クレジット残高 |
+| Codex | ChatGPT個人Free/Plus/Pro/ProLite、同一アカウント、有効な残量枠が全て100%未満、credit残高0・hasCredits=false・unlimited=false、上限/支出制限未到達、自動補充OFFの24時間有効なユーザー確認 | 自動補充OFF設定そのものの自動取得（ユーザー確認に依存） |
 
 Claudeの認証確認に失敗・診断が古い・未対応プランならBLOCKED。Claudeは残量不明だけではBLOCKEDにしない。Codexの確認不足・期限切れ・上限到達・正の残高はBLOCKED。どちらもアカウント切替はBLOCKEDになる。
 
@@ -52,7 +58,7 @@ doctorは認証方式とCLI機能の診断で、レビューの実行許可は�
 
 ### 現行の対応範囲と限界
 
-- Claudeの対応はMax / 通常Opus。auth statusの形式と必要なCLI機能を検証する。/usageパーサーのCLIバージョン固定は、本番レビューには適用しない。
+- Claudeの対応はPro / Opus・Sonnet、Max / Opus・Fable・Sonnet。auth statusの形式と必要なCLI機能を検証する。/usageパーサーのCLIバージョン固定は、本番レビューには適用しない。
 - Claudeの追加利用OFFは運用上の前提で、自動検証していない。アカウント側で有効にすると従量利用を防げない。
 - Codexの自動補充OFFは確認記録の有効期間内でも外部変更を検出できない。OFF設定を維持することが前提。
 - 元デスクトップチャットの推論はrevloopの制御外。元ホスト側でも追加利用OFFを維持する。認証やproxy環境を削除して回避しない。

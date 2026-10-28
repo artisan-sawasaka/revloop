@@ -21,7 +21,7 @@ export async function loadConfirmation(): Promise<unknown> {
 }
 export async function confirmCodexAutoReloadOff(cwd: string): Promise<CodexConfirmation> {
   const auth=await codexMetadata('account/read',{refreshToken:false},cwd) as {account?:{type?:string;planType?:string}};
-  if(auth.account?.type!=='chatgpt'||!['plus','pro','prolite'].includes(auth.account.planType??''))throw Error('A supported personal ChatGPT subscription is required');
+  if(auth.account?.type!=='chatgpt'||!['free','plus','pro','prolite'].includes(auth.account.planType??''))throw Error('A supported personal ChatGPT subscription is required');
   const usage=await codexMetadata('account/rateLimits/read',undefined,cwd) as {accountId?:unknown};
   const fingerprint=codexFingerprint(usage.accountId);if(!fingerprint)throw Error('Cannot bind confirmation to a verified account');
   const now=Date.now(),receipt:CodexConfirmation={version:1,provider:'codex',source:'user-confirmed',autoReloadOff:true,accountFingerprint:fingerprint,confirmedAt:new Date(now).toISOString(),expiresAt:new Date(now+CONFIRMATION_TTL_MS).toISOString()};

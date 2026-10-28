@@ -1,20 +1,20 @@
 import { codexMetadata } from './codex-rpc.js';
 import { subscriptionEnv } from './process.js';
-import { readClaudeSubscription, CLAUDE_USAGE_VERSION } from './claude-usage.js';
+import { readClaudeSubscription, CLAUDE_USAGE_VERSION, claudeSubscriptionPlans, ClaudeAuthError } from './claude-usage.js';
 import { codexFingerprint, loadConfirmation, validConfirmation } from './billing-confirmation.js';
 import type { Provider } from './types.js';
 
 export interface BillingReport {
   policy: 'included-subscription-only'|'subscription-auth-only'; provider: Provider; checkedAt: string;
   status: 'ALLOW' | 'BLOCKED'; modelExecutionAllowed: boolean;
-  accountFingerprint: string | null; plan: string | null; model: 'opus' | null;
+  accountFingerprint: string | null; plan: string | null; model: 'opus' | 'sonnet' | 'fable' | null;
   evidence: string[]; confirmationExpiresAt?: string;
   reasons: string[];
   warnings?:string[];
   observations: { quotaUsedPercent: number[]; creditBalance: string | null; hasCredits: boolean | null; autoReloadEnabled: boolean | null; paidUsageDisabled: boolean | null };
 }
 const object = (v: unknown): v is Record<string,unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
-const supportedPlans = ['plus','pro','prolite'];
+const supportedPlans = ['free','plus','pro','prolite'];
 export function assessBilling(provider: Provider, raw?: unknown, confirmation?: unknown, now=Date.now()): BillingReport {
   const r: BillingReport = {policy:'included-subscription-only',provider,checkedAt:new Date(now).toISOString(),status:'BLOCKED',modelExecutionAllowed:false,accountFingerprint:null,plan:null,model:null,evidence:[],reasons:[],observations:{quotaUsedPercent:[],creditBalance:null,hasCredits:null,autoReloadEnabled:null,paidUsageDisabled:null}};
   if(provider==='claude') {
@@ -69,9 +69,9 @@ export function assessClaudeSubscription(raw?:unknown,now=Date.now()):BillingRep
   const r=assessBilling('claude',undefined,undefined,now);
   r.policy='subscription-auth-only';r.reasons=[];
   r.warnings=['CLAUDE_USAGE_NOT_CHECKED','EXTRA_USAGE_OFF_MUST_BE_MAINTAINED_IN_CLAUDE_SETTINGS'];
-  if(!object(raw)||raw.evidence!=='claude-auth-status'||raw.plan!=='max'||raw.model!=='opus'||typeof raw.accountFingerprint!=='string'||!/^[a-f0-9]{64}$/.test(raw.accountFingerprint))r.reasons.push('CLAUDE_SUBSCRIPTION_AUTH_UNVERIFIED');
+  if(!object(raw)||raw.evidence!=='claude-auth-status'||!claudeSubscriptionPlans.includes(raw.plan as 'pro'|'max')||raw.model!=='opus'||typeof raw.accountFingerprint!=='string'||!/^[a-f0-9]{64}$/.test(raw.accountFingerprint))r.reasons.push('CLAUDE_SUBSCRIPTION_AUTH_UNVERIFIED');
   else {
-    r.accountFingerprint=raw.accountFingerprint;r.plan='max';r.model='opus';r.evidence=['claude-auth-status'];
+    r.accountFingerprint=raw.accountFingerprint;r.plan=raw.plan as 'pro'|'max';r.model='opus';r.evidence=['claude-auth-status'];
     const at=typeof raw.checkedAt==='string'?Date.parse(raw.checkedAt):NaN;
     if(!Number.isFinite(at)||at>now||now-at>30_000)r.reasons.push('STALE_AUTH_READING');
   }
@@ -89,6 +89,7 @@ export async function checkBilling(provider: Provider, cwd: string, stopFile?: s
   } catch(e) {
     if(e instanceof Error&&e.message==='STOPPED')throw e;
     const r=provider==='claude'?assessClaudeSubscription():assessBilling(provider);r.reasons.unshift('BILLING_PROBE_FAILED');
+    if(e instanceof ClaudeAuthError)r.reasons.push(...e.reasons);
     if(e instanceof Error&&/^(Unsupported Claude|Claude \/usage|Claude Max|Claude account|Subscription-only mode)/.test(e.message))r.reasons.push(e.message);
     return r;
   }

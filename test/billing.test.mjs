@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {assessBilling,assessClaudeSubscription,BillingSafetyError,requireSameAccount} from '../dist/billing.js';
 import {codexFingerprint,validConfirmation,CONFIRMATION_TTL_MS} from '../dist/billing-confirmation.js';
-import {parseClaudeUsageScreen,CLAUDE_USAGE_VERSION} from '../dist/claude-usage.js';
+import {parseClaudeUsageScreen,CLAUDE_USAGE_VERSION,parseClaudeAuthStatus,ClaudeAuthError} from '../dist/claude-usage.js';
 import {runProcess} from '../dist/process.js';
 import {start,review} from '../dist/engine.js';
 const now=Date.now();
@@ -26,6 +26,11 @@ Usage credits
 Usage credits are off · /usage-credits to turn them on`;
 test('Codex allows fresh quota + zero credits + matching unexpired user OFF confirmation',()=>{
  const r=assessBilling('codex',zero(),receipt(),now);assert.equal(r.status,'ALLOW');assert.equal(r.modelExecutionAllowed,true);assert.ok(r.evidence.includes('user-confirmed-auto-reload-off'));assert.equal(r.observations.autoReloadEnabled,false);
+ for(const plan of ['plus','pro','prolite']){
+  const evidence=zero();evidence.authenticatedPlan=plan;evidence.rateLimitsByLimitId.codex.planType=plan;
+  assert.equal(assessBilling('codex',evidence,receipt(),now).status,'ALLOW');
+  assert.equal(assessBilling('codex',evidence,undefined,now).status,'BLOCKED');
+ }
 });
 test('Codex fails closed without confirmation or on expiry/account change/future confirmation',()=>{
  for(const c of [undefined,{...receipt(),autoReloadOff:false},{...receipt(),accountFingerprint:'b'.repeat(64)},{...receipt(),expiresAt:new Date(now-1).toISOString()},{...receipt(),confirmedAt:new Date(now+5000).toISOString(),expiresAt:new Date(now+5000+CONFIRMATION_TTL_MS).toISOString()}])assert.equal(assessBilling('codex',zero(),c,now).status,'BLOCKED');
@@ -43,17 +48,32 @@ test('Claude auth-only policy does not require quota or assert paid usage is dis
  const proof={evidence:'claude-auth-status',plan:'max',model:'opus',accountFingerprint:'a'.repeat(64),checkedAt:new Date(now-100).toISOString()};
  const r=assessClaudeSubscription(proof,now);assert.equal(r.status,'ALLOW');assert.equal(r.policy,'subscription-auth-only');assert.equal(r.observations.paidUsageDisabled,null);assert.deepEqual(r.observations.quotaUsedPercent,[]);assert.ok(r.warnings.includes('CLAUDE_USAGE_NOT_CHECKED'));
  for(const change of [{plan:'api'},{accountFingerprint:null},{checkedAt:new Date(now-31_000).toISOString()},{checkedAt:new Date(now+1000).toISOString()},{evidence:'claude-usage-tty'}])assert.equal(assessClaudeSubscription({...proof,...change},now).status,'BLOCKED');
+ for(const plan of ['pro','max']){const allowed=assessClaudeSubscription({...proof,plan},now);assert.equal(allowed.status,'ALLOW');assert.equal(allowed.plan,plan);assert.equal(allowed.observations.paidUsageDisabled,null);}
+});
+
+test('Claude Pro and Max auth preserve account identity and reject unsupported plans, API routing and missing identity with safe reasons',()=>{
+ const base={loggedIn:true,authMethod:'claude.ai',apiProvider:'firstParty',subscriptionType:'max',email:'private@example.invalid',orgId:'private-org'};
+ const max=parseClaudeAuthStatus(base),pro=parseClaudeAuthStatus({...base,subscriptionType:'pro'});
+ assert.equal(pro.plan,'pro');assert.equal(max.plan,'max');assert.equal(pro.accountFingerprint,max.accountFingerprint);
+ for(const [change,reason] of [[{loggedIn:false},'CLAUDE_AUTH_NOT_LOGGED_IN'],[{authMethod:'apiKey'},'CLAUDE_AUTH_METHOD_NOT_SUBSCRIPTION'],[{apiProvider:'bedrock'},'CLAUDE_API_PROVIDER_NOT_FIRST_PARTY'],[{subscriptionType:'free'},'CLAUDE_SUBSCRIPTION_PLAN_UNSUPPORTED'],[{subscriptionType:'team'},'CLAUDE_SUBSCRIPTION_PLAN_UNSUPPORTED'],[{subscriptionType:null},'CLAUDE_SUBSCRIPTION_PLAN_UNSUPPORTED'],[{email:' '},'CLAUDE_ACCOUNT_IDENTITY_MISSING'],[{orgId:null},'CLAUDE_ACCOUNT_IDENTITY_MISSING']]){
+   assert.throws(()=>parseClaudeAuthStatus({...base,...change}),e=>e instanceof ClaudeAuthError&&e.reasons.includes(reason)&&!e.message.includes(base.email)&&!e.message.includes(base.orgId));
+ }
+ for(const invalid of [null,[],true,'json'])assert.throws(()=>parseClaudeAuthStatus(invalid),/CLAUDE_AUTH_RESPONSE_INVALID/);
+ assert.notEqual(parseClaudeAuthStatus({...base,orgId:'another-org'}).accountFingerprint,max.accountFingerprint);
 });
 
 test('Claude review uses auth status without invoking /usage, while API auth remains blocked',async()=>{
  const root=await fixture(),fake=path.join(root,'fake-auth-claude.mjs'),log=path.join(root,'calls.jsonl');
- await writeFile(fake,`import {appendFileSync} from 'node:fs';const a=process.argv.slice(2);appendFileSync(process.env.FAKE_LOG,JSON.stringify(a)+'\\n');if(a[0]==='auth')console.log(JSON.stringify({loggedIn:true,authMethod:process.env.FAKE_AUTH_METHOD||'claude.ai',apiProvider:'firstParty',subscriptionType:'max',email:'fixture@example.invalid',orgId:'fixture-org'}));else if(a[0]==='--version')console.log('2.1.999 (Claude Code)');else if(a[0]==='--help')console.log('--safe-mode --restricted --strict-mcp-config --tools --json-schema --name');else if(a.includes('-p'))console.log(JSON.stringify({type:'result',subtype:'success',is_error:false,session_id:'11111111-2222-3333-4444-555555555555',structured_output:{verdict:'PASS',summary:'fixture only',findings:[],notes:[]}}));else process.exitCode=97;`);
+ await writeFile(fake,`import {appendFileSync} from 'node:fs';const a=process.argv.slice(2);appendFileSync(process.env.FAKE_LOG,JSON.stringify(a)+'\\n');if(a[0]==='auth')console.log(JSON.stringify({loggedIn:true,authMethod:process.env.FAKE_AUTH_METHOD||'claude.ai',apiProvider:'firstParty',subscriptionType:process.env.FAKE_PLAN||'max',email:'fixture@example.invalid',orgId:'fixture-org'}));else if(a[0]==='--version')console.log('2.1.999 (Claude Code)');else if(a[0]==='--help')console.log('--safe-mode --restricted --strict-mcp-config --tools --json-schema --name');else if(a.includes('-p'))console.log(JSON.stringify({type:'result',subtype:'success',is_error:false,session_id:'11111111-2222-3333-4444-555555555555',structured_output:{verdict:'PASS',summary:'fixture only',findings:[],notes:[]}}));else process.exitCode=97;`);
  const s=await start(root,{source:'codex',context:'auth-only fixture',title:'No usage TTY',files:['x.ts']});
  const cmd={executable:process.execPath,prefix:[path.resolve('dist/cli.js')]},env={...process.env,REVLOOP_CLAUDE_PATH:fake,FAKE_LOG:log};
  const r=await runProcess(cmd,['review','--root',root,'--run',s.id],{cwd:root,env});assert.equal(r.code,0,r.stderr);
  const result=JSON.parse(r.stdout);assert.equal(result.status,'PASS');assert.equal(result.billingPolicy,'subscription-auth-only');assert.equal(result.billing.observations.paidUsageDisabled,null);
  const calls=(await readFile(log,'utf8')).trim().split('\n').map(JSON.parse);assert.ok(calls.filter(a=>a[0]==='auth').length>=2);assert.ok(calls.some(a=>a.includes('-p')));assert.ok(calls.every(a=>['auth','--version','--help'].includes(a[0])||a.includes('-p')));assert.ok(calls.every(a=>!a.includes('--ax-screen-reader')));
  const bad=await runProcess(cmd,['billing-check','--provider','claude'],{cwd:root,env:{...env,FAKE_AUTH_METHOD:'apiKey'}});assert.equal(bad.code,2);
+ assert.ok(JSON.parse(bad.stdout)[0].reasons.includes('CLAUDE_AUTH_METHOD_NOT_SUBSCRIPTION'));assert.ok(!bad.stdout.includes('fixture@example.invalid'));
+ const pro=await runProcess(cmd,['billing-check','--provider','claude'],{cwd:root,env:{...env,FAKE_PLAN:'pro'}});assert.equal(pro.code,0);assert.equal(JSON.parse(pro.stdout)[0].plan,'pro');
+ const free=await runProcess(cmd,['billing-check','--provider','claude'],{cwd:root,env:{...env,FAKE_PLAN:'free'}});assert.equal(free.code,2);assert.ok(JSON.parse(free.stdout)[0].reasons.includes('CLAUDE_SUBSCRIPTION_PLAN_UNSUPPORTED'));
  const before=await readFile(log,'utf8');const key=await runProcess(cmd,['billing-check','--provider','claude'],{cwd:root,env:{...env,ANTHROPIC_API_KEY:'never-log-this'}});assert.equal(key.code,2);assert.equal(await readFile(log,'utf8'),before);assert.ok(!key.stdout.includes('never-log-this'));
 });
 

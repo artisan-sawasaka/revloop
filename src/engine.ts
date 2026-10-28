@@ -8,7 +8,8 @@ import { atomicJson, event, loadState, lock, runDir, safeDir, saveState } from '
 import { codexMetadata, invokeReviewer, type ProviderResult } from './providers.js';
 import { terminal, hasVisualCoverage, assessReview, reviewCount, type Provider, type State } from './types.js';
 import { BillingSafetyError, requireIncludedBilling, requireSameAccount } from './billing.js';
-import { readSettings } from './settings.js';
+import { readSettings, selectReviewerSettings } from './settings.js';
+import { writeRoundLog } from './round-log.js';
 import {storeImages,loadImages} from './images.js';
 import {buildHaltReport,haltText,stopReason,type HaltReport} from './halt.js';
 export interface StartOptions { source: Provider; context: string; title: string; sourceSession?: string; files?: string[]; maxRounds?: number; stallLimit?: number; timeoutMs?: number; visual?:boolean }
@@ -24,7 +25,6 @@ export async function start(root: string, options: StartOptions): Promise<State>
   const id = randomUUID(), dir = await runDir(root,id);
   const reviewerCwd = await mkdtemp(path.join(os.tmpdir(),'revloop-'));
   const s: State = {version:1,id,root,source:options.source,reviewer:options.source === 'codex' ? 'claude' : 'codex',sourceSession:options.sourceSession,title:options.title,reviewerCwd,context:options.context,files:options.files ?? [],maxRounds,stallLimit,timeoutMs,status:'READY',createdAt:new Date().toISOString(),rounds:[]};
-  s.reviewerSettings=settings[s.reviewer];
   s.visualRequired=options.visual===true||initial.images.length>0;
   await saveState(dir,s); await writeFile(path.join(dir,'context.txt'),s.context); await event(dir,{type:'start',source:s.source,reviewer:s.reviewer,sourceSession:s.sourceSession}); return s;
 }
@@ -32,9 +32,15 @@ type Reviewer = (s: State, roundDir: string, stopFile: string) => Promise<Provid
 export async function review(root: string, id: string, reviewer: Reviewer = invokeReviewer): Promise<State> {
   const dir = await runDir(root,id), release = await lock(dir);
   let s: State | undefined;
+  let logEnabled=false, pendingRound: State['rounds'][number] | undefined;
   const stopFile = path.join(dir,'STOP');
   const finish = async () => {
     if (existsSync(stopFile)) { s!.status='STOPPED'; s!.reason=await stopReason(dir); }
+    if (logEnabled&&pendingRound) {
+      const round=pendingRound;pendingRound=undefined;
+      try { s!.roundLogFile=await writeRoundLog(dir,s!,round);delete s!.roundLogError; }
+      catch(e) { s!.roundLogError=`簡易ログを保存できませんでした: ${(e as Error).message}`; }
+    }
     await saveState(dir,s!); await event(dir,{type:'state',status:s!.status,round:s!.rounds.length,reason:s!.reason,halt:buildHaltReport(s!)}); return s!;
   };
   try {
@@ -43,20 +49,26 @@ export async function review(root: string, id: string, reviewer: Reviewer = invo
     if (existsSync(stopFile)) { s.status = 'STOPPED'; return await finish(); }
     if (s.status === 'REVIEWING') throw new Error('Previous review was interrupted; start a new run');
     if (reviewCount(s) >= s.maxRounds) { s.status = 'MAX_ROUNDS'; s.reason=`最大レビュー回数 ${s.maxRounds} 回に到達しました（今回 ${reviewCount(s)} 回、累計 ${s.rounds.length} 回）。`; return await finish(); }
-    s.reviewerSettings=(await readSettings())[s.reviewer];
+    const settings=await readSettings();
+    logEnabled=settings.logging.enabled;
+    if(reviewer!==invokeReviewer)s.reviewerSettings=settings.planProfiles[s.reviewer].pro!;
     // Mock reviewers never perform inference. The real adapter also gates itself when called directly.
     if (reviewer === invokeReviewer) {
       const billing=await requireIncludedBilling(s.reviewer,process.cwd(),stopFile);
       requireSameAccount(s.billing,billing);s.billing=billing;
+      s.reviewerSettings=selectReviewerSettings(settings,s.reviewer,billing.plan);
+      s.reviewerPlan=billing.plan!;
+      if(s.reviewer==='claude')billing.model=s.reviewerSettings.model as 'opus'|'sonnet'|'fable';
       await atomicJson(path.join(dir,'billing-check.json'),billing);
       await event(dir,{type:'billing-allowed',provider:s.reviewer,accountFingerprint:billing.accountFingerprint,checkedAt:billing.checkedAt});
     }
     const snap = await snapshot(root,s.files,s.context);
     if(s.visualRequired&&!snap.images.length){s.status='BLOCKED';s.reason='Visual review NOT RUN: required images are missing';return await finish();}
     if (s.rounds.some(r => r.fingerprint === snap.fingerprint)) { s.status = 'STALLED'; s.reason = 'Input unchanged or repeated; no new reviewer request sent'; return await finish(); }
-    const round = {number:s.rounds.length+1,fingerprint:snap.fingerprint,startedAt:new Date().toISOString(),reviewerSettings:{...s.reviewerSettings}} as State['rounds'][number];
+    const round = {number:s.rounds.length+1,fingerprint:snap.fingerprint,startedAt:new Date().toISOString(),reviewerSettings:{...s.reviewerSettings},...(s.reviewerPlan?{reviewerPlan:s.reviewerPlan}:{})} as State['rounds'][number];
     round.visualReview={status:'NOT_RUN',images:snap.images.map(i=>i.path),reason:snap.images.length?'Awaiting visual reviewer result':'Text-only scope; no images attached'};
     s.rounds.push(round); s.status = 'REVIEWING'; delete s.reason; await saveState(dir,s);
+    pendingRound=round;
     const roundDir = path.join(dir,`round-${round.number}`); await safeDir(roundDir);
     await writeFile(path.join(roundDir,'input.json'),snap.input);
     await storeImages(roundDir,snap.images);

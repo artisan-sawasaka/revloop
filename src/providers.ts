@@ -3,13 +3,14 @@ import path from 'node:path';
 import { checkProcess, resolveCommand, runProcess, subscriptionEnv, type ProcessResult } from './process.js';
 import { reviewCount, parseReview, reviewSchema, visualReviewSchema, type Provider, type Review, type State } from './types.js';
 import { uuid } from './storage.js';
-import { requireIncludedBilling, requireSameAccount } from './billing.js';
+import { requireIncludedBilling, requireSameAccount, BillingSafetyError } from './billing.js';
+import { profilePlan, requirePlanModel } from './plans.js';
 import { claudeEnv } from './claude-usage.js';
-import { codexModels, defaults, readSettings, requireModelChoice, validateReviewer } from './settings.js';
+import { codexModels, defaults, readSettings, requireModelChoice, validateReviewer, selectReviewerSettings } from './settings.js';
 import {loadImages,imageCopyPath,claudeImageInput,type SnapshotImage} from './images.js';
 export { codexMetadata } from './codex-rpc.js';
 export interface ProviderResult { review: Review; sessionId: string }
-export async function doctor(provider: Provider, cwd: string, stopFile?: string,visual=false): Promise<{ provider: Provider; version: string; auth: string; inference: string }> {
+export async function doctor(provider: Provider, cwd: string, stopFile?: string,visual=false,fast=false): Promise<{ provider: Provider; version: string; auth: string; inference: string }> {
   const env = subscriptionEnv(provider), cmd = resolveCommand(provider);
   const version = await runProcess(cmd,['--version'],{cwd,env,stopFile}); checkProcess(version);
   const help = await runProcess(cmd,provider === 'codex' ? ['exec','--help'] : ['--help'],{cwd,env,stopFile}); checkProcess(help);
@@ -19,6 +20,7 @@ export async function doctor(provider: Provider, cwd: string, stopFile?: string,
   if (provider === 'codex') {
     const features = await runProcess(cmd,['features','list'],{cwd,env,stopFile}); checkProcess(features);
     for (const feature of ['shell_tool','unified_exec','multi_agent','multi_agent_v2']) if (!new RegExp(`^${feature}\\s`,'m').test(features.stdout)) throw new Error(`Codex lacks required feature switch: ${feature}`);
+    if(fast&&!/^fast_mode\s/m.test(features.stdout))throw Error('Codex lacks Fast mode support; update the CLI');
   }
   const auth = await runProcess(cmd,provider === 'codex' ? ['login','status'] : ['auth','status'],{cwd,env,stopFile});
   if (auth.code !== 0 || auth.failure) throw new Error(provider === 'claude' ? 'Claude authentication unavailable: open Claude Code and run /login (no API fallback)' : 'Codex authentication unavailable: run codex login');
@@ -31,11 +33,12 @@ export async function doctor(provider: Provider, cwd: string, stopFile?: string,
   return { provider, version:version.stdout.trim(), auth:provider === 'codex' ? 'ChatGPT' : 'claude.ai', inference:'NOT RUN (login status does not prove token freshness)' };
 }
 export function providerArgs(s: State, schemaPath: string,images:SnapshotImage[]=[]): string[] {
-  const setting=validateReviewer(s.reviewer,s.reviewerSettings??defaults()[s.reviewer]);
+  const setting=validateReviewer(s.reviewer,s.reviewerSettings??defaults().planProfiles[s.reviewer].pro!);
+  if(s.reviewer==='claude'&&setting.model==='fable'&&s.reviewerPlan!=='max')throw Error('Fable requires an authenticated Max plan');
   if (s.reviewer === 'codex') {
     const common = ['-a','never','-c','web_search="disabled"','exec','--ignore-user-config','--ignore-rules','--sandbox','read-only','--skip-git-repo-check','--disable','shell_tool','--disable','unified_exec','--disable','multi_agent','--disable','multi_agent_v2'];
     if (s.reviewerSession) common.push('resume',s.reviewerSession);
-    return [...common,'--model',setting.model,'-c',`model_reasoning_effort="${setting.effort}"`,'--json','--output-schema',schemaPath,...images.flatMap(i=>['--image',imageCopyPath(path.dirname(schemaPath),i.image)]),'-'];
+    return [...common,'--model',setting.model,'-c',`model_reasoning_effort="${setting.effort}"`,'-c',`service_tier="${setting.fast===true?'fast':'default'}"`,'-c',`features.fast_mode=${setting.fast===true}`,'--json','--output-schema',schemaPath,...images.flatMap(i=>['--image',imageCopyPath(path.dirname(schemaPath),i.image)]),'-'];
   }
   const args = ['-p','--safe-mode','--restricted','--strict-mcp-config','--tools','','--permission-mode','dontAsk','--model',setting.model,'--effort',setting.effort,'--output-format',images.length?'stream-json':'json','--json-schema',JSON.stringify(images.length?visualReviewSchema:reviewSchema),...(images.length?['--input-format','stream-json','--verbose']:[])];
   return [...args,...(s.reviewerSession ? ['--resume',s.reviewerSession] : ['--name',s.title])];
@@ -73,13 +76,13 @@ export function decodeResult(provider: Provider, raw: ProcessResult, expectedSes
   return { sessionId, review:parseReview(value,requireVisual) };
 }
 export async function invokeReviewer(s: State, roundDir: string, stopFile: string): Promise<ProviderResult> {
-  const setting=validateReviewer(s.reviewer,s.reviewerSettings??(await readSettings())[s.reviewer]);
+  const setting=validateReviewer(s.reviewer,s.reviewerSettings??selectReviewerSettings(await readSettings(),s.reviewer,s.reviewerPlan));
   s.reviewerSettings=setting;
   const input = await readFile(path.join(roundDir,'input.json'),'utf8');
   if (Buffer.byteLength(input) > 512_000) throw new Error('Inline review input exceeds 512 KB; narrow the file scope. Nothing was truncated.');
   const images=await loadImages(roundDir,JSON.parse(input).files);
   if(s.visualRequired&&!images.length)throw Error('Visual review NOT RUN: required image attachments missing');
-  await doctor(s.reviewer,s.reviewerCwd,stopFile,images.length>0);
+  await doctor(s.reviewer,s.reviewerCwd,stopFile,images.length>0,setting.fast===true);
   if (s.reviewer==='codex') {
     const models=await codexModels(s.reviewerCwd,stopFile);requireModelChoice(setting,models);
     if(images.length&&!models.find(m=>m.model===setting.model)?.imageInput)throw Error('Selected Codex model does not advertise image input');
@@ -96,6 +99,14 @@ BEGIN SNAPSHOT JSON DATA\n${input}\nEND SNAPSHOT JSON DATA`;
   await writeFile(path.join(roundDir,'invocation.json'),JSON.stringify({provider:s.reviewer,settings:setting,args,cwd:s.reviewerCwd,images:images.map(({data,...info})=>info),imageTransport:images.length?(s.reviewer==='codex'?'--image':'stream-json image blocks'):'none'},null,2));
   const billing=await requireIncludedBilling(s.reviewer,process.cwd(),stopFile);
   requireSameAccount(s.billing,billing);s.billing=billing;
+  if(s.reviewerPlan!==undefined){
+    if(profilePlan(s.reviewer,s.reviewerPlan)!==profilePlan(s.reviewer,billing.plan))throw new BillingSafetyError({...billing,status:'BLOCKED',modelExecutionAllowed:false,reasons:['PLAN_CHANGED_BEFORE_INFERENCE']});
+  }else{
+    const expected=selectReviewerSettings(await readSettings(),s.reviewer,billing.plan);
+    if(expected.model!==setting.model||expected.effort!==setting.effort||Boolean(expected.fast)!==Boolean(setting.fast))throw Error('Reviewer settings do not match authenticated plan; request rejected.');
+  }
+  requirePlanModel(s.reviewer,billing.plan,setting.model,setting.fast===true);
+  if(s.reviewer==='claude')billing.model=setting.model as 'opus'|'sonnet'|'fable';
   await writeFile(path.join(roundDir,'billing-check.json'),JSON.stringify(billing,null,2));
   const request=s.reviewer==='claude'&&images.length?claudeImageInput(prompt,images,s.reviewerSession):prompt;
   const result = await runProcess(resolveCommand(s.reviewer),args,{cwd:s.reviewerCwd,input:request,timeoutMs:s.timeoutMs,stopFile,env:s.reviewer==='claude'?{...claudeEnv(),CLAUDE_CODE_EFFORT_LEVEL:setting.effort}:subscriptionEnv('codex')});

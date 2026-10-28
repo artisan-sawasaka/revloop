@@ -3,6 +3,7 @@ import { randomBytes } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { settingsPage } from './settings-page.js';
 import { codexModels, readSettings, revisionOf, saveSettings, settingsFile, validateSettings, requireModelChoice, type ModelChoice } from './settings.js';
+import { planAvailability, planModels } from './plans.js';
 
 async function jsonBody(req: IncomingMessage): Promise<unknown> {
   if (req.headers['content-type']!=='application/json') throw Error('Expected application/json');
@@ -28,12 +29,17 @@ export async function startSettingsServer(cwd: string, options: {file?:string; m
       if(req.url==='/api/settings'&&req.method==='GET') {
         const settings=await readSettings(file); let models:ModelChoice[]=[],catalogError=false;
         try{models=await getModels();}catch{catalogError=true;}
-        send(200,{settings,revision:revisionOf(settings),path:file,models,catalogError});
+        send(200,{settings,revision:revisionOf(settings),path:file,models,catalogError,planAvailability,planModels,modelCatalogScope:'current-account-only'});
       } else if(req.url==='/api/settings'&&req.method==='PUT') {
         const body=await jsonBody(req) as {settings?:unknown;revision?:unknown};
         if(!body||typeof body.revision!=='string')throw Error('Missing settings revision');
         const settings=validateSettings(body.settings);
-        requireModelChoice(settings.codex,await getModels());
+        const models=await getModels();
+        const previous=await readSettings(file);
+        for(const [plan,profile] of Object.entries(settings.planProfiles.codex)){
+          // An unchanged profile for a model absent from this account must not block other plans or logging preferences.
+          if(profile.fast===true||models.some(m=>m.model===profile.model)||JSON.stringify(profile)!==JSON.stringify(previous.planProfiles.codex[plan]))requireModelChoice(profile,models);
+        }
         await saveSettings(settings,body.revision,file);
         send(200,{settings,revision:revisionOf(settings)});
       } else if(req.url==='/api/close'&&req.method==='POST') {send(200,{closed:true});setTimeout(close,100);}

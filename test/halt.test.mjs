@@ -43,7 +43,7 @@ test('active stop returns a request log and owner preserves reason on completion
 test('limits, stagnation and process errors always save a specific reason',async()=>{
  const max=await fixture({maxRounds:1});await review(max.root,max.state.id,reply(fail));assert.match((await persisted(max)).reason,/最大レビュー回数 1/);
  const repeated=await fixture();await review(repeated.root,repeated.state.id,reply(fail));await review(repeated.root,repeated.state.id,reply(fail));assert.match((await persisted(repeated)).reason,/Input unchanged/);
- const stalled=await fixture();await review(stalled.root,stalled.state.id,reply(fail));await writeFile(path.join(stalled.root,'x.ts'),'modified');await review(stalled.root,stalled.state.id,reply(fail));assert.match((await persisted(stalled)).reason,/2 回連続/);
+ const stalled=await fixture({stallLimit:2});await review(stalled.root,stalled.state.id,reply(fail));await writeFile(path.join(stalled.root,'x.ts'),'modified');await review(stalled.root,stalled.state.id,reply(fail));assert.match((await persisted(stalled)).reason,/2 回連続/);
  const errored=await fixture();await review(errored.root,errored.state.id,async()=>{throw Error('TIMEOUT');});assert.equal((await persisted(errored)).reason,'TIMEOUT');
  const signal=await fixture();await review(signal.root,signal.state.id,async()=>{throw Error('STOPPED');});assert.match((await persisted(signal)).reason,/停止シグナル/);
 });

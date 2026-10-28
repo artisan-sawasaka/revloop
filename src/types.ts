@@ -6,7 +6,7 @@ export interface Finding { severity: 'P0' | 'P1' | 'P2' | 'P3'; file: string; li
 export interface VisualResult {status:'REVIEWED'|'NOT_RUN';observations:{file:string;observation:string}[]}
 export interface Review { verdict: 'PASS' | 'FAIL' | 'BLOCKED'; summary: string; findings: Finding[]; notes?:string[]; visual?:VisualResult }
 export interface ReviewDecision {reportedVerdict:Review['verdict'];effectiveVerdict:Review['verdict'];warnings:string[]}
-export interface Round { number: number; fingerprint: string; findingKey?: string; review?: Review; decision?:ReviewDecision; sessionId?: string; error?: string; startedAt: string; finishedAt?: string; reviewerSettings?: ReviewerSettings; visualReview?:{status:'REVIEWED'|'NOT_RUN';images:string[];reason?:string} }
+export interface Round { number: number; fingerprint: string; findingKey?: string; review?: Review; decision?:ReviewDecision; sessionId?: string; error?: string; startedAt: string; finishedAt?: string; reviewerSettings?: ReviewerSettings; reviewerPlan?:string; visualReview?:{status:'REVIEWED'|'NOT_RUN';images:string[];reason?:string} }
 export interface State {
   version: 1; id: string; root: string; source: Provider; reviewer: Provider;
   sourceSession?: string; title: string; reviewerSession?: string;
@@ -14,6 +14,9 @@ export interface State {
   files: string[]; context: string; createdAt: string; rounds: Round[];
   warning?: string; reason?: string; reviewerCwd: string; billing?: BillingReport;
   reviewerSettings?: ReviewerSettings;
+  reviewerPlan?:string;
+  roundLogFile?:string;
+  roundLogError?:string;
   visualRequired?:boolean;
   stopPending?:boolean;
   resumeAttempt?:{at:string;directory:string};

@@ -39,7 +39,7 @@ node C:\work\revloop\dist\cli.js install --root C:\work\your-project
 
 認証は `codex login`、Claude Code内の `/login` で行います。`doctor` は認証方式と機能の確認だけで、トークンが実際に使えるかはレビュー時に確認します。ChatGPT / claude.ai認証以外やAPIキー等の競合する環境変数がある場合は停止します。APIキーへのフォールバックやOAuthトークンの抽出を行いません。契約枠や追加利用の設定は各CLI・アカウントに従います。
 
-Claudeは `auth status` でclaude.ai / firstParty / Maxと同一アカウントを確認し、通常Opus・Fast無効で実行します。`/usage` のタイムアウトで止まる経路はレビューから外しました。確認方針は `subscription-auth-only`、残量は空欄、`paidUsageDisabled` はnullで、未確認であることをwarningsに残します。認証失敗・APIキー等の競合変数は引き続きBLOCKEDです。Codexは `included-subscription-only` として公式APIの残量・残高0、24時間有効のユーザーによる自動補充OFF確認を維持します。
+Claudeは `auth status` でclaude.ai / firstParty / Pro or Maxと同一アカウントを確認し、設定されたモデル（Opus／Sonnet、MaxではFableも可）・Fast無効で実行します。`/usage` のタイムアウトで止まる経路はレビューから外しました。確認方針は `subscription-auth-only`、残量は空欄、`paidUsageDisabled` はnullで、未確認であることをwarningsに残します。認証失敗・APIキー等の競合変数は引き続きBLOCKEDです。Codexは `included-subscription-only` として公式APIの残量・残高0、24時間有効のユーザーによる自動補充OFF確認を維持します。
 
 デスクトップからは、呼び出す相手だけを `doctor --provider codex` または `doctor --provider claude` で確認します。Skillにはその選択を組み込んでいます。認証・ルーティング変数の検査も相手CLI別です。例えばClaudeデスクトップに `ANTHROPIC_BASE_URL` が存在してもCodexのレビューを妨げませんが、Claudeをレビュアーとして呼ぶ場合は引き続き拒否します。親・子プロセスの環境変数を削除して回避する実装ではありません。引数なしのdoctorは両方を診断するため、片方だけ利用可能でも終了コード1になります。
 
@@ -47,7 +47,7 @@ PATHで見つからない場合は `REVLOOP_CODEX_PATH` / `REVLOOP_CLAUDE_PATH` 
 
 ## モデル・推論強度を変更する
 
-全プロジェクト共通の既定値は **Codex: Astra / 中（medium）、Claude: Opus / 中（medium）** です。保存先は `%USERPROFILE%\.revloop\settings.json`。元のデスクトップチャットのモデル設定とは独立しています。
+モデル設定はプランごとに独立しています。既定値は **Codex: Free Luna／Plus Sol／Pro Astra、Claude: Pro・Max Opus、推論強度は中（medium）、FastはOFF** です。保存先は `%USERPROFILE%\.revloop\settings.json`。元のデスクトップチャットのモデル設定とは独立しています。
 
 - Codexデスクトップ：「revloopの設定画面を開いて」
 - Claude Codeデスクトップ：`/revloop settings`、または「revloopの設定画面を開いて」
@@ -63,7 +63,7 @@ node C:\work\revloop\dist\cli.js config
 
 各レビュー開始時に最新設定を読み、モデルと推論強度をCLIに明示的に渡します。同じセッションの再レビューにも適用し、各回の `state.json` 内roundsと `round-N/invocation.json` に保存します。実行途中の変更は次の回から適用します。設定不正・Codexの未対応モデルや推論強度は停止し、別モデルへフォールバックしません。既存runにも次のレビューから適用します。
 
-Claudeの対応モデルは現在Opusのみです。推論強度は低・中・高・非常に高い・最大から選べます。Codexは取得したモデルごとの対応範囲内で選びます（自動委譲を伴うultraは提供しません）。CLIや管理ポリシーが強度を制限する場合があります。認証チェック、Codexの課金ガード、Claude Fast無効は設定画面から変更できません。Codexの自動補充OFF確認記録も別管理で、自動更新しません。
+ClaudeはProでOpus／Sonnet、MaxでOpus／Fable／Sonnetから選べます。FableのMax専用枠を使い、追加利用OFFをClaude側で維持します。推論強度は低・中・高・非常に高い・最大から選べます。Codexは取得したモデルごとの対応範囲内で選びます（自動委譲を伴うultraは提供しません）。CLIや管理ポリシーが強度を制限する場合があります。認証チェック、Codexの課金ガード、Claude Fast無効は設定画面から変更できません。Codexの自動補充OFF確認記録も別管理で、自動更新しません。
 
 GUIは127.0.0.1の一時ポートだけで待受し、起動ごとのトークンで読み書きを制限します。外部Origin・不正Host・競合保存を拒否します。壊れた設定ファイルは既定値で上書きせずエラーにするため、内容を修復してから開き直してください。
 
@@ -71,7 +71,30 @@ GUIは127.0.0.1の一時ポートだけで待受し、起動ごとのトーク�
 
 デスクトップで使えるモデルがCLIに出ない場合は、`codex --version` と `Get-Command codex -All` でPATH上のCLIを確認してください。この環境では旧npm CLI 0.153.4が優先されており、公式安定版0.163.0への更新で6.1 Solの選択が可能になりました。[原因・実機検証と容量不足エラー](docs/SOL61_CLI_VALIDATION.md)
 
-Codexのモデル候補は **Astra (`gpt-6-astra`) と6.1 Sol (`gpt-6.1-sol`) の2種類のみ** です。CLIのモデル一覧にない候補は「CLIで利用不可」として選択できません。モデル一覧に現れた後、画面の「再読み込み」で選択可能になります。実行直前の利用可否確認も維持します。
+### プラン別のモデル・推論強度
+
+各カードの「編集するプラン」で個別にモデル・推論強度・Fastを設定します。共通モデル設定や継承はありません。CodexはFree／Plus／Pro、ClaudeはFree／Pro／Maxだけを表示します。
+
+| プラン | Codexのモデル候補 | Claudeのモデル候補 |
+|---|---|---|
+| Free | Luna（CLIの利用権・残量を実行前に確認） | Sonnetを表示、Claude Code CLIは利用不可 |
+| Plus | Sol、Astra、Terra | プランなし |
+| Pro | Sol、Astra、Terra（ProLiteもこの設定） | Opus、Sonnet |
+| Max | プランなし | 優先順：Opus → Fable → Sonnet |
+
+[OpenAI公式プラン案内](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan)ではFreeもCodex対象で、CLIへのChatGPTログインを案内しています。revloopのFree候補はLunaに限定します。実際の利用権はCLIでも確認します。[Claude公式認証案内](https://code.claude.com/docs/en/authentication)では個人向けClaude CodeはPro／Maxのため、Freeのモデル・強度・Fast編集は無効です。[MaxにはFable専用の週間枠があります](https://support.claude.com/en/articles/12429409-manage-usage-credits-for-paid-claude-plans)。追加利用OFFの自動検証は行いません。
+
+編集対象の選択でログインや契約プランは変わりません。各回で認証された実際のプランに対応する設定を選び、使用プランとモデル・強度をroundsに記録します。未対応・不明なプランや実行直前のプラン変更は停止し、別プランや別モデルにフォールバックしません。Maxの優先順はメニューの順序で、自動切替ではありません。
+
+Codexの候補はrevloopのプラン別メニューと現在のCLI一覧の両方で制限し、推論強度もモデルの対応範囲内から選びます。他プランの利用権を保証するものではなく、契約変更後は再読み込みが必要です。保存APIでもプランの対応表と編集したCodex設定を検査し、現在の一覧にある保存済みモデルの強度・Fastも検査します。現在の一覧にない未変更の設定は、他プランやログの保存を妨げず保持します。実行直前には選択されたモデル・強度・Fastを必ず確認します。Claudeの強度は最新モデルの対応範囲を表示し、公式CLIや管理ポリシーによる制限も受けます。
+
+### Fastモード
+
+Codexは、選択モデルのFast対応が公式CLIのモデル一覧で確認できる場合だけONにできます。Plus／Proの個別設定に保存し（FreeはStandardのみ）、、各回の設定記録にも残します。ONは明示的にFast、OFFはStandardをCLIへ渡し、再レビューでも前回のFastを引き継ぎません。モデルを変更した場合はFastをOFFに戻します。対応情報がなくなった保存済みFastはOFFへ戻せますが、ONのままの保存・実行は拒否します。
+
+[OpenAI公式Speed案内](https://learn.chatgpt.com/docs/agent-configuration/speed)によるとCodex Fastはサブスク枠を通常の2.5倍消費します。残量・残高0・自動補充OFFの確認を引き続き必須とし、Ultrafastは提供しません。
+
+[Claude公式Fast案内](https://code.claude.com/docs/en/fast-mode)では、Pro／MaxでもFastは追加クレジット専用で、Sonnet／Haikuは非対応です。既存の課金ガードを維持するため、ClaudeのFastは理由を表示してONを無効にし、設定ファイルやAPIからのONも拒否します。子プロセスのFast無効化も維持します。
 
 ### 回数・タイムアウトの共通設定
 
@@ -85,7 +108,21 @@ Codexのモデル候補は **Astra (`gpt-6-astra`) と6.1 Sol (`gpt-6.1-sol`) �
 
 回数・タイムアウトは **新しく開始するrunに適用** します。実行中のサイクルでは現在の上限を維持し、回数上限で停止した後にユーザーがrevloopを再実行すると、今回のカウントを0に戻して共通設定の最大回数を読み直します。停滞回数とタイムアウトは既存runの値を維持します。モデル・推論強度の「次の再レビューから適用」とは異なります。`start` に明示した `--max-rounds`、`--stall-limit`、`--timeout-seconds` は開始時の共通設定より優先します。最大回数は新サイクルへの移行時に共通設定へ更新します。入力が前回と同じ、または過去の入力に戻った場合の即停止、強制停止、課金確認の停止条件は独立して維持します。課金確認には別の診断タイムアウトがあります。
 
-設定ファイルはversion 2で、`loop: {maxRounds, stallLimit, timeoutSeconds}` を保存します。旧version 1はモデル・強度をそのまま引き継ぎ、3項目を初期値で補います。画面で保存するとversion 2になります。旧画面からの書き戻しは拒否されるため、更新前に開いた画面はsettingsコマンドで開き直してください。
+設定ファイルはversion 7で、プラン別の `planProfiles` に加えて、`loop: {maxRounds, stallLimit, timeoutSeconds}` と `logging: {enabled, chatEnabled}` を保存します。旧version 1〜6の共通値は、継承していた有料プランの個別設定へコピーします。既存の個別設定・回数・ログの選択を保持し、Freeは既定値を追加します。メモリ上だけで移行し、画面で保存するとversion 7になります。新しい候補から外れた旧モデルはエラーにして、黙って別モデルへ変えません。旧画面からの書き戻しは拒否されるため、更新前に開いた画面はsettingsコマンドで開き直してください。
+
+### 簡易ログ出力
+
+設定画面の「簡易ログのファイル出力」（`logging.enabled`）でON／OFFを変更できます（既定ON）。次のレビュー開始時に読み直し、各回の終了時に `.revloop/runs/<UUID>/rounds.jsonl` へ1行のJSONを追記します。サイクル番号・今回／累計のレビュー回数・終了状態・生判定と実効判定・指摘件数・各指摘の重要度／ファイル／行／内容を記録し、異常終了した試行も理由を残します。元チャットの修正作業や会話全文は含みません。実行中に設定を変更した場合は次の回から適用します。
+
+OFFの間は簡易ログを追記せず、ONに戻しても過去の回を補完しません。既存ログは削除せず、再開・診断用の `state.json`、`history.jsonl`、各回の入出力は引き続き保存します。簡易ログの保存に失敗した場合はCLIの `roundLogError` で通知し、レビュー結果は維持します。保存したファイルの絶対パスは `roundLogFile` で返します。
+
+### 終了後にチャットへログ表示
+
+「終了後にチャットへログ表示」（`logging.chatEnabled`、既定ON）はファイル出力とは独立した設定です。`start`・`review`・`status`・`stop`等のrun出力には `chatLog: {enabled, text}` を返します。ONでは今回／累計の回数、各回のレビュー判定・指摘件数・重要度／ファイル／行／内容をCLIが表示用テキストにまとめます。生判定と実効判定の相違、失敗・未完了の回、停止理由も区別します。元チャットの会話全文や修正内容の推測は含みません。
+
+更新済みのCodex・Claude用スキルは、最終報告前に同じrunの `status` を読み直し、ONなら `chatLog.text` を一度だけコードブロックとして表示し、OFFなら各回の経過ログを省略します。終了時の設定を適用するため、実行中の変更や過去runへの変更も反映します。`rounds.jsonl` ではなく保存状態から生成するため、ファイル出力OFF／チャット表示ONも可能です。チャット表示OFFでも最終結果・回数・修正やテストの要約・停止理由・必要な次の操作・ログ保存エラーは報告します。ツール実行結果や作業中の進捗表示を隠す設定ではありません。
+
+設定を読めない場合は実際のrun結果を維持し、`chatLog.enabled: null`、空の `text` と `chatLog.error` を返します。スキルはこの制約を報告し、表示設定を推測しません。CLIの結果に `chatLog` がない失敗時も、runがあれば `status` で取得します。新規インストール用のスキルにも同じ指示を含めています。チャット表示はホストAIによる指示の実行に依存し、アプリのUIへ強制挿入する機能ではありません。以前から読み込み済みのチャットは古い指示を保持する可能性があるため、更新したスキルを読み直して使用してください。
 
 ## チャットで使う
 
