@@ -1,0 +1,3 @@
+{"root":"C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-live-claude-3igHnG","run":"bc42ec3d-2756-45bc-9ba4-80c0dc4310ed","phase":"review-bug"}
+{"status":"ERROR","reason":"Claude authentication unavailable: open Claude Code and run /login (no API fallback)"}
+{"history":"C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-live-claude-3igHnG\\.revloop\\runs\\bc42ec3d-2756-45bc-9ba4-80c0dc4310ed"}

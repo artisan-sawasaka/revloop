@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS",
+  "summary": "前回の必須指摘2件はいずれも解消しています。1件目はsrc/cli.tsのpublicStateです。nextActionがレビュアー別に分かれ、Claudeでは「サブスク認証と同一アカウントのみ確認し、残量・追加利用OFFは未確認、/usageは呼ばない」と正しく案内します。Codexでは従来の文言を維持しています。2件目のdocs/BILLING_SAFETY.mdは、Codexの判定条件・確認手順と、プロバイダー別の実行フロー・限界が「現在の方針」の下位見出しにまとまりました。旧/usage方式は「以前の方式と検証履歴」節に分けられ、現在の保証ではないと明記されています。Claudeの本番経路（初回レビュー・推論直前の確認・再開レビュー）はauth statusによる認証確認だけを使い、policyはsubscription-auth-only、paidUsageDisabledはnull、warningsも出力されます。APIキー等の競合変数・非サブスク認証・古い認証情報・アカウント変更はBLOCKEDのままです。Codexのガード、レビューループ、入力の整合性検査、停止理由のログにも後退は見当たりません。",
+  "findings": [],
+  "notes": [
+    "READY時の案内を確認する追加テストは、test/billing.test.mjsで--sourceの値に対して分岐しています。期待値自体は正しいものの、--source codexのときにClaudeがレビュアーになる関係がテストからは読み取りにくいです。reviewerの値で分岐させると意図が明確になります（任意）。",
+    "README末尾の「Claudeの診断にはnode-ptyのConPTYとxterm/headlessを使う」という記述は、EXE化の検討事項として書かれています。本番経路からは外れたため、旧診断用に限ると補足すると誤解を減らせます（任意）。",
+    "テストは実行していません。docs/AUTH_ONLY_REVIEW_VALIDATION.mdには修正後に関連テスト14件が成功と記録されていますが、全スイートの再実行は未記録です。"
+  ]
+}

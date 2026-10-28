@@ -1,0 +1,45 @@
+{
+  "reviewer": "codex",
+  "root": "C:\\work\\revloop\\scratch\\settings-live-cummJK\\codex",
+  "id": "3a20d4dc-83e1-49f2-ab95-2d0482ad17e7",
+  "status": "PASS",
+  "reviewerSession": "01a15118-889d-7af2-b97d-6c8f372fd422",
+  "rounds": [
+    {
+      "round": 1,
+      "verdict": "FAIL",
+      "sessionId": "01a15118-889d-7af2-b97d-6c8f372fd422",
+      "settings": {
+        "model": "gpt-6-astra",
+        "effort": "medium"
+      },
+      "billing": "ALLOW"
+    },
+    {
+      "round": 2,
+      "verdict": "PASS",
+      "sessionId": "01a15118-889d-7af2-b97d-6c8f372fd422",
+      "settings": {
+        "model": "gpt-6-astra",
+        "effort": "medium"
+      },
+      "billing": "ALLOW"
+    }
+  ],
+  "runtime": {
+    "model": "gpt-6-astra",
+    "reasoningEffort": "medium",
+    "turns": [
+      {
+        "model": "gpt-6-astra",
+        "effort": "medium",
+        "turnId": "01a15118-891e-7482-8b96-a445063528e4"
+      },
+      {
+        "model": "gpt-6-astra",
+        "effort": "medium",
+        "turnId": "01a15119-39b2-7bf2-80ff-11964b1d46db"
+      }
+    ]
+  }
+}

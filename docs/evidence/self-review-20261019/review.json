@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS",
+  "summary": "提出スナップショットのコードとドキュメントを静的にレビューしました（ビルド・テスト・CLIは実行していません）。承認前に修正が必要な確定不具合は見つかりませんでした。以下の要件はいずれもコード上で満たされています。(1) 課金ゲートは各ラウンド前（engine.ts）と推論直前（providers.ts）の二重チェックで、アカウント照合があり、不明な状態では止まる。(2) Codex は read-only・shell等無効、Claude は safe-mode/restricted・ツールなしで起動する。(3) レビュー中の入力改変・ソース変更・画像コピー差し替えはERRORになる。(4) 画像観察が不足するとBLOCKEDになり、テキストのみの実行は NOT_RUN。(5) 生のPASSに指摘があれば実効FAILとして修正へ回し、生判定と完了済みの画像確認を保持する。(6) FAILで指摘がなければBLOCKED。(7) JSON不正・プロセス失敗・セッション不一致はERROR。(8) 設定GUIは127.0.0.1のみで待ち受け、トークン・Host・Originを検査し、課金系フィールドは拒否する。(9) 回数・タイムアウトは新規run開始時に固定され、モデル設定は各ラウンドで再読込される。",
+  "findings": [],
+  "notes": [
+    "src/engine.ts の停滞判定は `s.rounds.slice(-s.stallLimit)` に今回のラウンドを含みます。そのため stallLimit=1（GUIで選べる値）では、最初のFAILでいきなりSTALLEDになり、修正ループが一度も回りません。既定値2では README の「2回続くと停滞」と一致します。値1の意味をREADMEやGUIの説明に書くか、下限を2にすることを検討してください（任意）。",
+    "src/snapshot.ts: Git の既定スコープ（--file なし）では、追跡中の PNG/JPEG/WebP が自動で画像添付になり、視覚レビュー必須になります。画像が8枚を超えるリポジトリでは開始自体が失敗します。以前もバイナリはNon-UTF8で失敗していたので後退ではありません。ただ「画像は明示的な添付」という説明とはずれるので、既定スコープでは画像を外して警告するか、READMEに明記する余地があります（任意）。",
+    "src/cli.ts の billing-check / doctor は --root で指定したフォルダで Claude の /usage 診断を実行します。一方、engine.ts は process.cwd() で実行します。未信頼のフォルダでは BLOCKED になるだけなので安全側ですが、BILLING_SAFETY.md の「起動フォルダで診断」という説明と挙動が少し違います（任意）。",
+    "src/settings.ts の saveSettings は保存中にクラッシュすると settings.json.lock が残り、以後の保存が EEXIST で失敗し続けます。安全側ですが、復旧手順（ロックファイルの削除）を書いておくとよいです（任意）。",
+    "src/types.ts の parseReview は notes に空文字列があるだけでERRORにします。要件（形式不正はERROR）とは合っていますが、レビュアーの軽微な出力ゆれで実行が止まる可能性があります（任意）。",
+    "package.json の files に docs/SETTINGS_VALIDATION.md、VISUAL_REVIEW_VALIDATION.md、VERDICT_HANDLING.md などが入っておらず、README のリンク先がパッケージに含まれません。private パッケージで公開は未実施なので、影響は npm pack の成果物だけです（任意）。",
+    "docs/SETTINGS_VALIDATION.md 冒頭の version=1、BILLING_SAFETY.md / VALIDATION.md の37件などのテスト件数は当時の記録で、現行仕様は後ろの追記・README・コードと一致しています。",
+    "このレビューは静的レビューです。テストと実機CLIは実行していません。"
+  ]
+}

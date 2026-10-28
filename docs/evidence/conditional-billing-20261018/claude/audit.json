@@ -1,0 +1,26 @@
+{
+  "verified": true,
+  "observedAt": "2026-10-18T08:18:42.390Z",
+  "root": "C:\\work\\revloop\\scratch\\desktop-tMOVMd\\claude",
+  "run": "ef4dcf27-15de-4d9a-a1b2-7c3972148876",
+  "source": "claude",
+  "sourceSession": "98c7ef7e-58de-4c41-88fe-87ea298a7e2b",
+  "reviewer": "codex",
+  "reviewerSession": "01a14e15-08f8-74d1-86be-8138374c3342",
+  "title": "revloop デスクトップ実機検証",
+  "status": "PASS",
+  "checks": {
+    "twoRounds": true,
+    "finalPass": true,
+    "firstFail": true,
+    "secondPass": true,
+    "sameReviewer": true,
+    "sourceSessionRecorded": true,
+    "inputFingerprints": true,
+    "testUnchanged": true,
+    "currentFilesMatch": true,
+    "sourceChanged": true,
+    "billingAllowed": true,
+    "billingBeforeEveryReview": true
+  }
+}

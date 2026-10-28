@@ -1,0 +1,39 @@
+
+> revloop@0.1.0 test
+> npm run build && node --test test/*.test.mjs
+
+
+> revloop@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ FAIL -> source repair -> PASS retains reviewer ID, source chat, immutable history (258.266ms)
+✔ unchanged FAIL stops before another model request (212.1973ms)
+✔ cyclic input and repeated findings stop loops (587.7148ms)
+✔ max rounds and BLOCKED are terminal, never PASS (321.5891ms)
+✔ stop prevents further work and is visible between repairs (64.2864ms)
+✔ source drift and reviewer input tampering reject even PASS (246.127ms)
+✔ findings cannot direct the worker outside supplied files (106.9105ms)
+✔ provider exceptions persist error and release lock (98.3425ms)
+✔ concurrent review of same run is rejected (51.814ms)
+✔ recovery refuses live process locks (51.8241ms)
+✔ strict review contract refuses malformed and contradictory results (0.8196ms)
+✔ Claude code-zero api_error is not a successful review (0.2265ms)
+✔ Codex requires completed turn, valid session, and valid final JSON (0.2593ms)
+✔ argv locks down reviewer privileges on initial and resumed calls (0.1979ms)
+✔ scope path traversal, secrets, oversized/binary input fail closed (268.6281ms)
+✔ directory junction cannot escape review root (90.8903ms)
+✔ Git snapshot captures staged + unstaged + untracked and deletion (580.9879ms)
+✔ child process argv and UTF8 stdin survive shell metacharacters (50.4187ms)
+✔ timeouts and stop files terminate children (856.2497ms)
+✔ timeout kills the owned process tree including a grandchild (829.8717ms)
+✔ excessive provider output terminates instead of exhausting memory (422.5296ms)
+✔ subscription env refuses API key without exposing its value (0.3393ms)
+✔ installation writes both entrypoints and preserves existing skills (59.5516ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5234.5454

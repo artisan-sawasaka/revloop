@@ -1,0 +1,67 @@
+{
+  "provider": "codex",
+  "settings": {
+    "model": "gpt-6-astra",
+    "effort": "medium"
+  },
+  "args": [
+    "-a",
+    "never",
+    "-c",
+    "web_search=\"disabled\"",
+    "exec",
+    "--ignore-user-config",
+    "--ignore-rules",
+    "--sandbox",
+    "read-only",
+    "--skip-git-repo-check",
+    "--disable",
+    "shell_tool",
+    "--disable",
+    "unified_exec",
+    "--disable",
+    "multi_agent",
+    "--disable",
+    "multi_agent_v2",
+    "resume",
+    "01a151c8-59f0-7133-a941-e88c2084d07a",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"medium\"",
+    "--json",
+    "--output-schema",
+    "C:\\work\\revloop\\scratch\\visual-live-8oeSRA\\codex\\.revloop\\runs\\fa817814-6a8a-4db3-8411-995c1f185dc3\\round-2\\schema.json",
+    "--image",
+    "C:\\work\\revloop\\scratch\\visual-live-8oeSRA\\codex\\.revloop\\runs\\fa817814-6a8a-4db3-8411-995c1f185dc3\\round-2\\images\\1.png",
+    "--image",
+    "C:\\work\\revloop\\scratch\\visual-live-8oeSRA\\codex\\.revloop\\runs\\fa817814-6a8a-4db3-8411-995c1f185dc3\\round-2\\images\\2.png",
+    "-"
+  ],
+  "cwd": "C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-g3xIa2",
+  "images": [
+    {
+      "path": "Candidate.png",
+      "sha256": "4ff1bbf81ccf8802819bd0001b68468011642bccc928a7137d4d67dad4e97c16",
+      "image": {
+        "index": 1,
+        "mime": "image/png",
+        "width": 640,
+        "height": 360,
+        "bytes": 5097
+      }
+    },
+    {
+      "path": "Reference.png",
+      "sha256": "4ff1bbf81ccf8802819bd0001b68468011642bccc928a7137d4d67dad4e97c16",
+      "image": {
+        "index": 2,
+        "mime": "image/png",
+        "width": 640,
+        "height": 360,
+        "bytes": 5097
+      }
+    }
+  ],
+  "imageTransport": "--image"
+}

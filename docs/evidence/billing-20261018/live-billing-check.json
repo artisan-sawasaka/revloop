@@ -1,0 +1,40 @@
+[
+  {
+    "policy": "included-subscription-only",
+    "provider": "codex",
+    "checkedAt": "2026-10-18T03:05:50.989Z",
+    "status": "BLOCKED",
+    "modelExecutionAllowed": false,
+    "reasons": [
+      "PAID_USAGE_CONTROL_UNVERIFIED: Balance and quota do not prove auto-reload is disabled or prevent mid-turn paid-credit fallback.",
+      "NO_SUPPORTED_NO_CREDIT_EXECUTION: Current CLI integration has no verified server-enforced no-paid-credit execution control."
+    ],
+    "observations": {
+      "quotaUsedPercent": [
+        14
+      ],
+      "creditBalance": "0",
+      "hasCredits": false,
+      "autoReloadEnabled": null,
+      "paidUsageDisabled": null
+    }
+  },
+  {
+    "policy": "included-subscription-only",
+    "provider": "claude",
+    "checkedAt": "2026-10-18T03:05:50.990Z",
+    "status": "BLOCKED",
+    "modelExecutionAllowed": false,
+    "reasons": [
+      "CLAUDE_BILLING_STATUS_UNAVAILABLE: No verified machine-readable CLI contract for live quota and disabled usage credits.",
+      "NO_SUPPORTED_NO_CREDIT_EXECUTION: Current CLI integration has no verified server-enforced no-paid-credit execution control."
+    ],
+    "observations": {
+      "quotaUsedPercent": [],
+      "creditBalance": null,
+      "hasCredits": null,
+      "autoReloadEnabled": null,
+      "paidUsageDisabled": null
+    }
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "oldPathCli": "0.153.4",
+  "desktopCli": "0.163.0-alpha.10.2",
+  "oldVisibleModels": [
+    "gpt-6-astra",
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "gpt-5.6-luna"
+  ],
+  "oldIncludedHiddenStillNoSol61": true,
+  "newCli": {
+    "provider": "codex",
+    "version": "codex-cli 0.163.0",
+    "auth": "ChatGPT",
+    "inference": "NOT RUN (login status does not prove token freshness)"
+  },
+  "newModels": [
+    "gpt-6.1-sol",
+    "gpt-6-astra",
+    "gpt-6-sol",
+    "gpt-6-luna",
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "gpt-5.6-luna"
+  ],
+  "sameAccountFingerprint": "7cb7fceab3879eff0f14391dc8117cda87fa55bbf8a4cf804f2395596890042a"
+}

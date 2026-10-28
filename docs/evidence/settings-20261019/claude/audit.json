@@ -1,0 +1,61 @@
+{
+  "reviewer": "claude",
+  "root": "C:\\work\\revloop\\scratch\\settings-live-cummJK\\claude",
+  "id": "43af341d-2bdd-4ab6-a97a-d593eea5ee5a",
+  "status": "PASS",
+  "reviewerSession": "15c6736d-8519-4e0f-9de8-5ec761996b3d",
+  "rounds": [
+    {
+      "round": 1,
+      "verdict": "FAIL",
+      "sessionId": "15c6736d-8519-4e0f-9de8-5ec761996b3d",
+      "settings": {
+        "model": "opus",
+        "effort": "medium"
+      },
+      "billing": "ALLOW"
+    },
+    {
+      "round": 2,
+      "verdict": "PASS",
+      "sessionId": "15c6736d-8519-4e0f-9de8-5ec761996b3d",
+      "settings": {
+        "model": "opus",
+        "effort": "medium"
+      },
+      "billing": "ALLOW"
+    }
+  ],
+  "runtime": {
+    "messages": [
+      {
+        "timestamp": "2026-10-18T22:18:59.188Z",
+        "model": "claude-opus-5-5",
+        "requestedModel": "claude-opus-5-5",
+        "effort": "medium",
+        "perTurnEffort": "medium",
+        "serviceTier": "standard"
+      },
+      {
+        "timestamp": "2026-10-18T22:19:44.262Z",
+        "model": "claude-opus-5-5",
+        "requestedModel": "claude-opus-5-5",
+        "effort": "medium",
+        "perTurnEffort": "medium",
+        "serviceTier": "standard"
+      }
+    ],
+    "requests": [
+      {
+        "timestamp": "2026-10-18T22:18:54.883Z",
+        "model": "claude-opus-5-5",
+        "effort": "medium"
+      },
+      {
+        "timestamp": "2026-10-18T22:19:40.581Z",
+        "model": "claude-opus-5-5",
+        "effort": "medium"
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "provider": "codex",
+  "settings": {
+    "model": "gpt-6-astra",
+    "effort": "medium"
+  },
+  "args": [
+    "-a",
+    "never",
+    "-c",
+    "web_search=\"disabled\"",
+    "exec",
+    "--ignore-user-config",
+    "--ignore-rules",
+    "--sandbox",
+    "read-only",
+    "--skip-git-repo-check",
+    "--disable",
+    "shell_tool",
+    "--disable",
+    "unified_exec",
+    "--disable",
+    "multi_agent",
+    "--disable",
+    "multi_agent_v2",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"medium\"",
+    "--json",
+    "--output-schema",
+    "C:\\work\\revloop\\scratch\\settings-live-cummJK\\codex\\.revloop\\runs\\3a20d4dc-83e1-49f2-ab95-2d0482ad17e7\\round-1\\schema.json",
+    "-"
+  ],
+  "cwd": "C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-U9UXgp"
+}

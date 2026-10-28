@@ -1,0 +1,3 @@
+{"root":"C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-live-codex-fyMjGG","run":"f1692a04-3494-402f-9b80-c068643aadeb","phase":"review-bug"}
+{"status":"BLOCKED","review":{"verdict":"BLOCKED","summary":"input.json の読み取りが実行ポリシーにより拒否され、全文を確認できませんでした。レビューに必要な証拠が不足しています。コードやテストの実行、ファイルの変更は行っていません。","findings":[]},"reason":"input.json の読み取りが実行ポリシーにより拒否され、全文を確認できませんでした。レビューに必要な証拠が不足しています。コードやテストの実行、ファイルの変更は行っていません。"}
+{"history":"C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-live-codex-fyMjGG\\.revloop\\runs\\f1692a04-3494-402f-9b80-c068643aadeb"}

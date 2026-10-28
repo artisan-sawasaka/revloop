@@ -1,0 +1,50 @@
+[
+  {
+    "file": "package.json",
+    "sha256": "fa95f2d340966d5615372ff9400f13ebba284db0eccda7adc25e413596225d9a"
+  },
+  {
+    "file": "package-lock.json",
+    "sha256": "6ab166af063fa93106919e08e8d0615f7fc445af7a4d007ce1e877a1f180a84d"
+  },
+  {
+    "file": "src/cli.ts",
+    "sha256": "190719d40f4fb4421fddf5c390487658a1b6392efb4e32275fc7d0e2de487c52"
+  },
+  {
+    "file": "src/engine.ts",
+    "sha256": "9bf3f57dcf70ab02e14866f04ea8944fa3c6db9d45ba59362b4e8cacd0270c52"
+  },
+  {
+    "file": "src/install.ts",
+    "sha256": "debd23d3c4c72954814329ba58970ce0ac58ff0e80ffc3c91fc5507a1028b4db"
+  },
+  {
+    "file": "src/process.ts",
+    "sha256": "4635af78a883fa5c558f87d18b50fce6bcd566f62225fb753af6c1b660a346ae"
+  },
+  {
+    "file": "src/providers.ts",
+    "sha256": "40de9abf8377ce348e712e8bce879506363b74166a541af2e8fd7b2e34a445c9"
+  },
+  {
+    "file": "src/snapshot.ts",
+    "sha256": "d67beec221aa477a6cb94f071feca9db13422091027fc3ed89eee72a9fcc7fac"
+  },
+  {
+    "file": "src/storage.ts",
+    "sha256": "c44237b3cb1520e808766895bb47ae54645f90b004d1ed779022126bdcc95144"
+  },
+  {
+    "file": "src/types.ts",
+    "sha256": "82edd826ba3c6bdc6f2cb21bb6f77eaa5a3ce1fa9672b0303497ba2590219bdd"
+  },
+  {
+    "file": ".agents/skills/revloop/SKILL.md",
+    "sha256": "5208306fdd2f5f53c456be3ee67e88283c4f69c15c81a0114efdde15ffed6c2e"
+  },
+  {
+    "file": ".claude/skills/revloop/SKILL.md",
+    "sha256": "e0ff10c74576ea7fcda414652272a592b2b11e455859bece31e6c7eaa47d5c8f"
+  }
+]

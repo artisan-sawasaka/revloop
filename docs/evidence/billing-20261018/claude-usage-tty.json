@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-18",
+  "cliVersion": "2.1.302",
+  "launch": "claude --safe-mode --strict-mcp-config --tools '' --permission-mode dontAsk --ax-screen-reader",
+  "input": "/usage",
+  "inference": false,
+  "observed": {
+    "credits": "Usage credits are off",
+    "sessionUsedPercent": 2,
+    "weeklyUsedPercent": 7,
+    "fableWeeklyUsedPercent": 5,
+    "apiDurationSeconds": 0,
+    "inputTokens": 0,
+    "outputTokens": 0
+  },
+  "initialTranscript": "\u001b[?25l\u001b[11;1H$\u001b[K\r\n\u001b[K\u001b[11;2H\u001b[?25h\u001b[?2004h\u001b]0;◐ Claude Code\u0007\u001b[?25l\u001b[10;1Hyou: /usage\u001b[K\r\nForging…\u001b[K\r\ndon't ask on (shift+tab to cycle)  ·  esc to interrupt\r\n$\u001b[?25h\u001b]0;✳ Claude Code\u0007\u001b[?25l\u001b[?25l\u001b[11;1HSettings  Status   Config   Usage   Stats\u001b[K\r\nSession\u001b[K\r\nTotal cost:            $0.0000\u001b[K\r\nTotal duration (API):  0s\r\nTotal duration (wall): 22s\r\nTotal code changes:    0 lines added, 0 lines removed\r\nUsage:                 0 input, 0 output, 0 cache read, 0 cache write\r\nCurrent session\r\n1% 1% used\r\nResets 3:10pm (Etc/GMT-9)\r\nCurrent week (all models)\r\n6% 6% used\r\nResets Oct 22, 9pm (Etc/GMT-9)\r\nWhat's contributing to your limits usage?\u001b[?25h\r\nApproximate, based on local sessions on this machine — does not include other   \u001b[24;78H\u001b[?25h\r\ndevices or claude.ai\r\nScanning local sessions…\r\nRefreshing…\u001b[?25l\r\nEsc to cancel\u001b[6;29H\u001b[?25h\u001b[?25l\u001b[14;1H2% 2% used\u001b[K\r\nResets 3:09pm (Etc/GMT-9)\u001b[K\r\nCurrent week (all models)\u001b[K\r\n7% 7% used\u001b[K\r\nResets Oct 22, 8:59pm (Etc/GMT-9)\u001b[K\r\nCurrent week (Fable)\u001b[K\r\n5% 5% used\u001b[K\r\nResets Oct 22, 8:59pm (Etc/GMT-9)\u001b[K\r\nWhat's contributing to your limits usage?\u001b[K\r\nApproximate, based on local sessions on this machine — does not include other   \r\ndevices or claude.ai\u001b[K\u001b[?25h\r\nScanning local sessions…\r\nUsage credits\r\nUsage credits are off · /usage-credits to turn them on\u001b[?25l\r\nEsc to cancel\u001b[2;29H\u001b[?25h",
+  "followupTranscript": "Usage credits\r\nUsage credits are off · /usage-credits to turn them on\u001b[?25l\r\nEsc to cancel\u001b[1;29H\u001b[?25h"
+}

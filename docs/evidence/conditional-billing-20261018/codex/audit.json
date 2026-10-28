@@ -1,0 +1,26 @@
+{
+  "verified": true,
+  "observedAt": "2026-10-18T08:18:42.314Z",
+  "root": "C:\\work\\revloop\\scratch\\desktop-tMOVMd\\codex-verified",
+  "run": "9368978d-22a9-4ee9-96d1-13ef69fc6eff",
+  "source": "codex",
+  "sourceSession": "01a14c83-a547-70b0-baa1-af6092f2b81d",
+  "reviewer": "claude",
+  "reviewerSession": "54cdbfb8-de8c-4485-abf3-70d3e3d7d5ba",
+  "title": "revloopの公式仕様を調査",
+  "status": "PASS",
+  "checks": {
+    "twoRounds": true,
+    "finalPass": true,
+    "firstFail": true,
+    "secondPass": true,
+    "sameReviewer": true,
+    "sourceSessionRecorded": true,
+    "inputFingerprints": true,
+    "testUnchanged": true,
+    "currentFilesMatch": true,
+    "sourceChanged": true,
+    "billingAllowed": true,
+    "billingBeforeEveryReview": true
+  }
+}

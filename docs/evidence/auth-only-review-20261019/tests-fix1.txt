@@ -1,0 +1,22 @@
+✔ Codex allows fresh quota + zero credits + matching unexpired user OFF confirmation (3.9073ms)
+✔ Codex fails closed without confirmation or on expiry/account change/future confirmation (0.6598ms)
+✔ Codex refuses paid credits, exhausted/expired/malformed windows, API auth and unsupported plans (0.8447ms)
+✔ historical Claude usage evidence is still assessed without rewriting old guarantees (0.7646ms)
+✔ Claude auth-only policy does not require quota or assert paid usage is disabled (0.9607ms)
+✔ Claude review uses auth status without invoking /usage, while API auth remains blocked (1098.8214ms)
+✔ READY guidance distinguishes Claude auth-only from Codex credit verification (450.9991ms)
+✔ usage-screen parser rejects stale, updating, missing, conflicting, or non-diagnostic screens (0.9261ms)
+✔ rendered terminal replacements cannot be accepted by matching stale raw history (27.9687ms)
+✔ account changes between rounds are rejected even when both accounts independently allow (0.5305ms)
+✔ confirmation failure blocks actual adapter before a round or inference (294.3796ms)
+✔ legacy NEEDS_FIX run is blocked if its current billing check fails (352.8036ms)
+✔ Codex probe only reads account/limits, no inference or credit operations, no force flag (813.1997ms)
+✔ Codex metadata stop marker prevents even the diagnostic CLI launch (2.4491ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3215.3339

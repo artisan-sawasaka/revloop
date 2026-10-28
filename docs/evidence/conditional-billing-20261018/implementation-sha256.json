@@ -1,0 +1,66 @@
+[
+  {
+    "file": "package.json",
+    "sha256": "d127c53ee642ab99aabdfe72247f0288dcc38700b303c7aaa7a642ed45b953f1"
+  },
+  {
+    "file": "package-lock.json",
+    "sha256": "105a835a51fedae83e3759c63e9f355f55f21a7370b0888cf6147a554117c3fd"
+  },
+  {
+    "file": "src/billing-confirmation.ts",
+    "sha256": "032a5831cfaa6fa2c1abeffe8440b7908fd80cc789c398375886a4d722fe364c"
+  },
+  {
+    "file": "src/billing.ts",
+    "sha256": "7c2fe94c40420ee2a43d291534b606659b2099b7cffbf92299c79f49635329ba"
+  },
+  {
+    "file": "src/claude-usage.ts",
+    "sha256": "d721ae15672ee17ac53350d9f7b7768f887cb0480e648d62b23bc6efb9b60b69"
+  },
+  {
+    "file": "src/cli.ts",
+    "sha256": "2d35ec7fb631a3d00b1584c0ada1a99dc0e638425da820120bd25ef5157a8136"
+  },
+  {
+    "file": "src/codex-rpc.ts",
+    "sha256": "e119301ef2eb447aeb87dad28c3ddb6af82a06e0aec78c562ffb5ed4564ddb78"
+  },
+  {
+    "file": "src/engine.ts",
+    "sha256": "970df0854903a8211f84a6af3902edcf1fff43242fff02aa0718fed20d474290"
+  },
+  {
+    "file": "src/install.ts",
+    "sha256": "9fb836fee4666bfac93655001e5f59fe05e34a2adb47d410ef7f5c151aabd67f"
+  },
+  {
+    "file": "src/process.ts",
+    "sha256": "4635af78a883fa5c558f87d18b50fce6bcd566f62225fb753af6c1b660a346ae"
+  },
+  {
+    "file": "src/providers.ts",
+    "sha256": "d4d692814c64495e064718b0dbdf5b2b502c83d6d10905016d650c3732ff6a3e"
+  },
+  {
+    "file": "src/snapshot.ts",
+    "sha256": "d67beec221aa477a6cb94f071feca9db13422091027fc3ed89eee72a9fcc7fac"
+  },
+  {
+    "file": "src/storage.ts",
+    "sha256": "c44237b3cb1520e808766895bb47ae54645f90b004d1ed779022126bdcc95144"
+  },
+  {
+    "file": "src/types.ts",
+    "sha256": "b88d47e29ed0dac2d377994bca1925c7729e79f615cde18e8cd093aee9899fc2"
+  },
+  {
+    "file": ".agents/skills/revloop/SKILL.md",
+    "sha256": "f9a0cacf30043aaa08332795346d79969676b3d8bd24fe4fba8a8a817e99806c"
+  },
+  {
+    "file": ".claude/skills/revloop/SKILL.md",
+    "sha256": "5e9197c731153cfface5e526bfa20f3b767c2db040ff1c12cdad2f9b779eb0d7"
+  }
+]

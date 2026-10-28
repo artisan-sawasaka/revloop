@@ -1,0 +1,28 @@
+{
+  "provider": "claude",
+  "settings": {
+    "model": "opus",
+    "effort": "medium"
+  },
+  "args": [
+    "-p",
+    "--safe-mode",
+    "--restricted",
+    "--strict-mcp-config",
+    "--tools",
+    "",
+    "--permission-mode",
+    "dontAsk",
+    "--model",
+    "opus",
+    "--effort",
+    "medium",
+    "--output-format",
+    "json",
+    "--json-schema",
+    "{\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"verdict\",\"summary\",\"findings\"],\"properties\":{\"verdict\":{\"type\":\"string\",\"enum\":[\"PASS\",\"FAIL\",\"BLOCKED\"]},\"summary\":{\"type\":\"string\"},\"findings\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"severity\",\"file\",\"line\",\"message\",\"fix\"],\"properties\":{\"severity\":{\"type\":\"string\",\"enum\":[\"P0\",\"P1\",\"P2\",\"P3\"]},\"file\":{\"type\":\"string\"},\"line\":{\"type\":\"integer\",\"minimum\":0},\"message\":{\"type\":\"string\"},\"fix\":{\"type\":\"string\"}}}}}}",
+    "--name",
+    "revloop 共通モデル設定 実機検証 claude"
+  ],
+  "cwd": "C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-5ulbCG"
+}

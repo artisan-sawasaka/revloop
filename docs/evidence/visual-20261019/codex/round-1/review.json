@@ -1,0 +1,26 @@
+{
+  "verdict": "FAIL",
+  "summary": "2枚を目視で比較しました。図形の形と位置は一致していますが、Candidate.pngの右側の正方形の色が承認済みデザインと異なります。",
+  "findings": [
+    {
+      "severity": "P2",
+      "file": "Candidate.png",
+      "line": 0,
+      "message": "右側の正方形がオレンジ色です。Reference.pngでは緑色であり、色の一致という受入条件を満たしていません。",
+      "fix": "右側の正方形をReference.pngと同じ緑色に変更してください。"
+    }
+  ],
+  "visual": {
+    "status": "REVIEWED",
+    "observations": [
+      {
+        "file": "Candidate.png",
+        "observation": "白い背景に左側の青い円と右側のオレンジ色の正方形があります。両図形の形・大きさ・位置はReference.pngと目視で一致していますが、正方形の色が異なります。"
+      },
+      {
+        "file": "Reference.png",
+        "observation": "白い背景に左側の青い円と右側の緑色の正方形があり、両図形の中心は同じ高さに並んでいます。"
+      }
+    ]
+  }
+}

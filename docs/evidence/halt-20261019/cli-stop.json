@@ -1,0 +1,29 @@
+{
+  "id": "61d5e909-88dd-472b-ad57-1c1b18c96c1b",
+  "status": "STOPPED",
+  "reason": "停止理由の受け渡し確認のため、レビュー実行前に停止",
+  "historyDirectory": "C:\\work\\revloop\\scratch\\halt-demo-2MmfvB\\.revloop\\runs\\61d5e909-88dd-472b-ad57-1c1b18c96c1b",
+  "halt": {
+    "runId": "61d5e909-88dd-472b-ad57-1c1b18c96c1b",
+    "status": "STOPPED",
+    "reason": "停止理由の受け渡し確認のため、レビュー実行前に停止",
+    "reviewer": "claude",
+    "round": 0,
+    "limits": {
+      "maxRounds": 5,
+      "stallLimit": 2,
+      "timeoutSeconds": 300
+    },
+    "billingReasons": [],
+    "decisionWarnings": [],
+    "nextAction": "停止済みです。元チャットの修正作業は、必要に応じてホスト側でも停止してください。",
+    "logs": {
+      "state": "C:\\work\\revloop\\scratch\\halt-demo-2MmfvB\\.revloop\\runs\\61d5e909-88dd-472b-ad57-1c1b18c96c1b\\state.json",
+      "history": "C:\\work\\revloop\\scratch\\halt-demo-2MmfvB\\.revloop\\runs\\61d5e909-88dd-472b-ad57-1c1b18c96c1b\\history.jsonl",
+      "stopRequest": "C:\\work\\revloop\\scratch\\halt-demo-2MmfvB\\.revloop\\runs\\61d5e909-88dd-472b-ad57-1c1b18c96c1b\\STOP",
+      "stopRequestLog": "C:\\work\\revloop\\scratch\\halt-demo-2MmfvB\\.revloop\\runs\\61d5e909-88dd-472b-ad57-1c1b18c96c1b\\stop-request.log",
+      "halt": "C:\\work\\revloop\\scratch\\halt-demo-2MmfvB\\.revloop\\runs\\61d5e909-88dd-472b-ad57-1c1b18c96c1b\\halt.log",
+      "haltJson": "C:\\work\\revloop\\scratch\\halt-demo-2MmfvB\\.revloop\\runs\\61d5e909-88dd-472b-ad57-1c1b18c96c1b\\halt.json"
+    }
+  }
+}

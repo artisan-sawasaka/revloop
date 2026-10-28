@@ -1,0 +1,25 @@
+{
+  "policy": "included-subscription-only",
+  "provider": "claude",
+  "checkedAt": "2026-10-18T08:15:07.619Z",
+  "status": "ALLOW",
+  "modelExecutionAllowed": true,
+  "accountFingerprint": "ee9f147dc6549225def76f5aace8d4a2c5920c256638d5bd5a7bda4d39ee7a30",
+  "plan": "max",
+  "model": "opus",
+  "evidence": [
+    "claude-auth-status",
+    "claude-usage-tty"
+  ],
+  "reasons": [],
+  "observations": {
+    "quotaUsedPercent": [
+      0,
+      7
+    ],
+    "creditBalance": null,
+    "hasCredits": null,
+    "autoReloadEnabled": null,
+    "paidUsageDisabled": true
+  }
+}

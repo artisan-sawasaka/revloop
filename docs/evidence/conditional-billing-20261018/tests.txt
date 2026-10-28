@@ -1,0 +1,53 @@
+
+> revloop@0.1.0 test
+> npm run build && node --test test/*.test.mjs
+
+
+> revloop@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ Codex allows fresh quota + zero credits + matching unexpired user OFF confirmation (3.086ms)
+✔ Codex fails closed without confirmation or on expiry/account change/future confirmation (0.3604ms)
+✔ Codex refuses paid credits, exhausted/expired/malformed windows, API auth and unsupported plans (0.5102ms)
+✔ Claude accepts only fresh validated Max/Opus diagnostic with credits OFF (0.5304ms)
+✔ usage-screen parser rejects stale, updating, missing, conflicting, or non-diagnostic screens (1.1781ms)
+✔ rendered terminal replacements cannot be accepted by matching stale raw history (26.6699ms)
+✔ account changes between rounds are rejected even when both accounts independently allow (0.7583ms)
+✔ confirmation failure blocks actual adapter before a round or inference (279.1166ms)
+✔ legacy NEEDS_FIX run is blocked if its current billing check fails (292.3006ms)
+✔ Codex probe only reads account/limits, no inference or credit operations, no force flag (607.7388ms)
+✔ Codex metadata stop marker prevents even the diagnostic CLI launch (3.5296ms)
+✔ FAIL -> source repair -> PASS retains reviewer ID, source chat, immutable history (324.8501ms)
+✔ unchanged FAIL stops before another model request (219.346ms)
+✔ cyclic input and repeated findings stop loops (595.6559ms)
+✔ max rounds and BLOCKED are terminal, never PASS (340.7964ms)
+✔ stop prevents further work and is visible between repairs (62.0705ms)
+✔ source drift and reviewer input tampering reject even PASS (261.3511ms)
+✔ findings cannot direct the worker outside supplied files (102.5397ms)
+✔ provider exceptions persist error and release lock (106.2047ms)
+✔ concurrent review of same run is rejected (52.9998ms)
+✔ recovery refuses live process locks (55.357ms)
+✔ strict review contract refuses malformed and contradictory results (0.8311ms)
+✔ Claude code-zero api_error is not a successful review (0.2295ms)
+✔ Codex requires completed turn, valid session, and valid final JSON (0.2477ms)
+✔ argv locks down reviewer privileges on initial and resumed calls (0.213ms)
+✔ scope path traversal, secrets, oversized/binary input fail closed (282.0235ms)
+✔ directory junction cannot escape review root (102.6532ms)
+✔ Git snapshot captures staged + unstaged + untracked and deletion (575.8368ms)
+✔ child process argv and UTF8 stdin survive shell metacharacters (56.9106ms)
+✔ timeouts and stop files terminate children (835.3484ms)
+✔ timeout kills the owned process tree including a grandchild (847.4426ms)
+✔ excessive provider output terminates instead of exhausting memory (305.2831ms)
+✔ subscription env refuses API key without exposing its value (0.4131ms)
+✔ desktop provider environment does not block the opposite reviewer or mutate host variables (0.1956ms)
+✔ all relevant provider routing/auth overrides remain blocked, including case variants (0.2353ms)
+✔ doctor can check only the opposite reviewer inside a desktop environment (790.7215ms)
+✔ installation writes both entrypoints and preserves existing skills (64.543ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6116.0456

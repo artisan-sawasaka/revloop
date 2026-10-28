@@ -1,0 +1,10 @@
+2026-10-18 Windows ConPTY / codex-cli 0.153.4
+cwd: C:\work\revloop\scratch\probe
+Launch: codex -a never -s read-only --no-alt-screen
+Input: /revloop + Enter
+Observed: Unrecognized command '/revloop'. Type "/" for a list of supported commands.
+No model request was made by this unrecognized command.
+
+Repeated after installing .agents/skills/revloop/SKILL.md in C:\work\revloop:
+  $revloop was recognized in the skill picker.
+  /revloop + Enter still returned the same Unrecognized command error.

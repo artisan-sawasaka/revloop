@@ -1,0 +1,24 @@
+{
+  "verified": true,
+  "observedAt": "2026-10-18T02:28:21.535Z",
+  "root": "C:\\work\\revloop\\scratch\\desktop-WBXXAw\\claude-final-wzlaXC",
+  "run": "9ce72a19-4546-40a7-b017-3d0724d741d9",
+  "source": "claude",
+  "sourceSession": "98c7ef7e-58de-4c41-88fe-87ea298a7e2b",
+  "reviewer": "codex",
+  "reviewerSession": "01a14cd5-81dd-7801-9f02-d689cc2d5499",
+  "title": "revloop デスクトップ実機検証",
+  "status": "PASS",
+  "checks": {
+    "twoRounds": true,
+    "finalPass": true,
+    "firstFail": true,
+    "secondPass": true,
+    "sameReviewer": true,
+    "sourceSessionRecorded": true,
+    "inputFingerprints": true,
+    "testUnchanged": true,
+    "currentFilesMatch": true,
+    "sourceChanged": true
+  }
+}

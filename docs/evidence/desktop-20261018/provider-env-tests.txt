@@ -1,0 +1,42 @@
+
+> revloop@0.1.0 test
+> npm run build && node --test test/*.test.mjs
+
+
+> revloop@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ FAIL -> source repair -> PASS retains reviewer ID, source chat, immutable history (259.9057ms)
+✔ unchanged FAIL stops before another model request (186.8763ms)
+✔ cyclic input and repeated findings stop loops (544.7511ms)
+✔ max rounds and BLOCKED are terminal, never PASS (265.7902ms)
+✔ stop prevents further work and is visible between repairs (57.5392ms)
+✔ source drift and reviewer input tampering reject even PASS (249.8512ms)
+✔ findings cannot direct the worker outside supplied files (111.5812ms)
+✔ provider exceptions persist error and release lock (102.9663ms)
+✔ concurrent review of same run is rejected (48.7352ms)
+✔ recovery refuses live process locks (54.1241ms)
+✔ strict review contract refuses malformed and contradictory results (0.8666ms)
+✔ Claude code-zero api_error is not a successful review (0.2338ms)
+✔ Codex requires completed turn, valid session, and valid final JSON (0.248ms)
+✔ argv locks down reviewer privileges on initial and resumed calls (0.2033ms)
+✔ scope path traversal, secrets, oversized/binary input fail closed (290.5357ms)
+✔ directory junction cannot escape review root (101.5609ms)
+✔ Git snapshot captures staged + unstaged + untracked and deletion (553.4733ms)
+✔ child process argv and UTF8 stdin survive shell metacharacters (50.3526ms)
+✔ timeouts and stop files terminate children (847.0417ms)
+✔ timeout kills the owned process tree including a grandchild (853.8868ms)
+✔ excessive provider output terminates instead of exhausting memory (370.8396ms)
+✔ subscription env refuses API key without exposing its value (0.4091ms)
+✔ desktop provider environment does not block the opposite reviewer or mutate host variables (0.1706ms)
+✔ all relevant provider routing/auth overrides remain blocked, including case variants (0.2238ms)
+✔ doctor can check only the opposite reviewer inside a desktop environment (675.925ms)
+✔ installation writes both entrypoints and preserves existing skills (53.724ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5758.7121

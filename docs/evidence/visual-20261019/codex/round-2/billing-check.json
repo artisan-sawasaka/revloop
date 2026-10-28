@@ -1,0 +1,26 @@
+{
+  "policy": "included-subscription-only",
+  "provider": "codex",
+  "checkedAt": "2026-10-19T01:32:23.261Z",
+  "status": "ALLOW",
+  "modelExecutionAllowed": true,
+  "accountFingerprint": "7cb7fceab3879eff0f14391dc8117cda87fa55bbf8a4cf804f2395596890042a",
+  "plan": "prolite",
+  "model": null,
+  "evidence": [
+    "codex-account-read",
+    "codex-rate-limits",
+    "user-confirmed-auto-reload-off"
+  ],
+  "reasons": [],
+  "observations": {
+    "quotaUsedPercent": [
+      40
+    ],
+    "creditBalance": "0",
+    "hasCredits": false,
+    "autoReloadEnabled": false,
+    "paidUsageDisabled": true
+  },
+  "confirmationExpiresAt": "2026-10-19T08:10:04.285Z"
+}

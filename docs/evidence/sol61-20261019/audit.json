@@ -1,0 +1,15 @@
+{
+  "runId": "48fa6402-e0a7-4a21-aff2-2fdb2403bea7",
+  "status": "ERROR",
+  "reviewerSession": "01a1517e-e498-7930-bebd-f77e8940d6a9",
+  "configuredModel": "gpt-6.1-sol",
+  "configuredEffort": "medium",
+  "serviceError": "Selected model is at capacity. Please try a different model.",
+  "newDisplayedError": "Codex failed: Selected model is at capacity. Please try a different model.",
+  "reviewCompleted": false,
+  "reReview": "NOT RUN: capacity error is terminal",
+  "billing": "ALLOW",
+  "creditBalance": "0",
+  "hasCredits": false,
+  "autoReloadOffConfirmationExpiresAt": "2026-10-19T08:10:04.285Z"
+}

@@ -1,0 +1,21 @@
+{
+  "context": "実機検証用の小さな独立プロジェクトです。sum(a,b) は2つの有限整数の和を返す必要があります。数値検証や巨大整数への対応は対象外です。sum.mjs と添付テストだけをレビューしてください。テストは作業担当が実行します。",
+  "scope": "explicit files",
+  "git": {
+    "head": null,
+    "staged": "",
+    "unstaged": ""
+  },
+  "files": [
+    {
+      "path": "sum.mjs",
+      "sha256": "c01a4dda8409c0ac1b53b9223b8700f9be4a9024245cf8ec125ceebf4f7f5709",
+      "content": "export const sum = (a, b) => a + b;\n"
+    },
+    {
+      "path": "sum.test.mjs",
+      "sha256": "e0ef9f18a9b888abe297f5110dcbe91ea60cf5085b2217225946a4747ee581ef",
+      "content": "import test from 'node:test';import assert from 'node:assert/strict';import {sum} from './sum.mjs';test('sum adds finite integers',()=>{assert.equal(sum(5,2),7);assert.equal(sum(-3,1),-2);assert.equal(sum(0,0),0);});\n"
+    }
+  ]
+}

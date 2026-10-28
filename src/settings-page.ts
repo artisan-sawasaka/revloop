@@ -1,0 +1,43 @@
+import { defaults, codexModelOptions } from './settings.js';
+export const settingsPage = `<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>revloop 設定</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,"Yu Gothic UI",sans-serif;background:#11151c;color:#e8edf5}*{box-sizing:border-box}body{margin:0;padding:40px 22px}main{max-width:800px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}h1{font-size:29px;margin:5px 0}p{line-height:1.8;color:#b9c6d8}small,.eyebrow{color:#91a6bf}.eyebrow{letter-spacing:.16em;font-size:12px}.badge{background:#18372e;color:#b2e8cf;padding:8px 12px;border-radius:30px;font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.card{background:#1a212d;border:1px solid #334155;border-radius:16px;padding:24px}h2{margin:0 0 20px;font-size:21px}label{display:block;font-size:14px;margin-top:18px;margin-bottom:8px}select{width:100%;background:#101721;color:#eff5ff;border:1px solid #52647c;border-radius:8px;padding:11px;font:inherit}select:focus,button:focus{outline:2px solid #86c5ff;outline-offset:3px}button{font:inherit;cursor:pointer;border:1px solid #52647c;border-radius:9px;padding:11px 18px;background:#202e40;color:#e8edf5}button.primary{background:#a8d6ff;color:#11243a;border-color:transparent;font-weight:700}button:disabled{opacity:.45;cursor:default}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.notice{margin:24px 0;padding:18px 22px;border-left:3px solid #6c9f92;background:#172520;border-radius:0 10px 10px 0}.notice p{margin:0;color:#c4dcd3}#status{min-height:30px;margin-top:18px;white-space:pre-wrap}#status.error{color:#ffafac}#location{overflow-wrap:anywhere;font-size:12px}footer{margin-top:30px;border-top:1px solid #334155;padding-top:18px} @media(max-width:620px){.grid{grid-template-columns:1fr}header{align-items:flex-start;gap:12px}.badge{white-space:nowrap;font-size:11px}body{padding:24px 16px}}
+input[type=number]{width:100%;background:#101721;color:#eff5ff;border:1px solid #52647c;border-radius:8px;padding:11px;font:inherit}input:focus{outline:2px solid #86c5ff;outline-offset:3px}.loop-card{margin-top:20px}.limits-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.hint{display:block;margin-top:8px;line-height:1.6}.loop-card p{margin-bottom:0;font-size:14px}@media(max-width:620px){.limits-grid{grid-template-columns:1fr}}
+</style></head><body><main>
+<header><div><div class="eyebrow">REVLOOP / PREFERENCES</div><h1>レビュアー設定</h1></div><span class="badge">サブスク限定</span></header>
+<p>全プロジェクト共通の設定です。モデル・推論強度は次のレビューから、最大回数は新しいrunまたは上限到達後の再実行から適用されます。停滞回数・タイムアウトは新しいrunから適用されます。</p>
+<form id="form"><div class="grid">
+<section class="card"><h2>Codex</h2><small>Claudeからのレビューを担当</small><label for="codex-model">モデル</label><select id="codex-model" disabled></select><label for="codex-effort">推論強度</label><select id="codex-effort" disabled></select></section>
+<section class="card"><h2>Claude Code</h2><small>Codexからのレビューを担当</small><label for="claude-model">モデル</label><select id="claude-model" disabled><option value="opus">Opus</option></select><label for="claude-effort">推論強度</label><select id="claude-effort" disabled></select><p><small>現在の対応モデルはOpusです。Fastモードは常にOFFです。</small></p></section>
+</div>
+<section class="card loop-card"><h2>回数・タイムアウト</h2><div class="limits-grid">
+<div><label for="max-rounds">最大レビュー回数</label><input id="max-rounds" type="number" min="1" max="50" step="1" required disabled aria-describedby="max-rounds-hint"><small id="max-rounds-hint" class="hint">1〜50回。1サイクルの上限です。再実行時に今回の回数を0へ戻します。</small></div>
+<div><label for="stall-limit">停滞検出の回数</label><input id="stall-limit" type="number" min="1" max="10" step="1" required disabled aria-describedby="stall-limit-hint"><small id="stall-limit-hint" class="hint">1〜10回。同じ指摘が続くと停止します。</small></div>
+<div><label for="timeout-seconds">タイムアウト（秒）</label><input id="timeout-seconds" type="number" min="1" max="3600" step="1" required disabled aria-describedby="timeout-hint"><small id="timeout-hint" class="hint">1〜3600秒。各回のレビュアーCLIの制限時間です。</small></div>
+</div><p>実行中のサイクルは現在の上限を維持します。回数上限で停止した後にrevloopを再実行すると、履歴と未解消指摘を引き継ぎ、今回の回数を0に戻して保存済みの最大回数を適用します。停滞回数・タイムアウトは既存runの値を維持します。入力が前回と同じ、または過去の入力へ戻った場合は、回数設定に関係なく停止します。</p></section>
+<div class="notice"><p>Claudeはサブスク認証を確認し、/usageによる残量・追加利用OFFの検査は行いません。Claude側の追加利用OFFを維持してください。Codexは引き続き残量・残高0・自動補充OFFの確認が必要です。APIキーへの切り替えは行いません。</p></div>
+<div class="actions"><button class="primary" id="save" disabled>設定を保存</button><button type="button" id="defaults" disabled>既定値を入力</button><button type="button" id="reload">再読み込み</button><button type="button" id="close">設定画面を終了</button></div>
+<div id="status" role="status" aria-live="polite">設定を読み込んでいます…</div></form>
+<footer><small>既定値：Codex Astra／中 ・ Claude Opus／中<br>最大5回 ・ 停滞2回 ・ タイムアウト300秒（5分）</small><p id="location"></p><small>Codexの自動補充OFFの確認記録（24時間）は別管理です。この画面は確認記録を更新しません。</small></footer>
+</main><script>
+'use strict';
+const token=location.hash.slice(1)||sessionStorage.getItem('revloop-token')||'';
+if(token)sessionStorage.setItem('revloop-token',token);history.replaceState(null,'',location.pathname);
+const el=id=>document.getElementById(id), labels={low:'低 (low)',medium:'中 (medium)',high:'高 (high)',xhigh:'非常に高い (xhigh)',max:'最大 (max)'};
+let state,revision,models=[],closed=false;
+const codexChoices=${JSON.stringify(codexModelOptions)};
+function message(text,error=false){el('status').textContent=text;el('status').className=error?'error':'';}
+function busy(value){for(const id of ['save','defaults','codex-model','codex-effort','claude-effort','max-rounds','stall-limit','timeout-seconds'])el(id).disabled=value;}
+async function api(route,method='GET',body){const response=await fetch(route,{method,headers:{Authorization:'Bearer '+token,...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});const data=await response.json();if(!response.ok)throw Error(data.error||'操作に失敗しました');return data;}
+function options(select,items,current){select.replaceChildren();for(const [value,label] of items){const option=document.createElement('option');option.value=value;option.textContent=label;select.append(option);}select.value=current;}
+function codexEffort(value){const m=models.find(m=>m.model===el('codex-model').value);options(el('codex-effort'),(m?.efforts||[]).map(e=>[e,labels[e]||e]),value);if(!el('codex-effort').value)el('codex-effort').selectedIndex=0;}
+function render(settings){el('codex-model').replaceChildren();for(const choice of codexChoices){const available=models.some(m=>m.model===choice.model);const option=document.createElement('option');option.value=choice.model;option.textContent=choice.label+(available?'':'（CLIで利用不可）');option.disabled=!available;el('codex-model').append(option);}el('codex-model').value=settings.codex.model;codexEffort(settings.codex.effort);options(el('claude-effort'),Object.entries(labels),settings.claude.effort);el('max-rounds').value=settings.loop.maxRounds;el('stall-limit').value=settings.loop.stallLimit;el('timeout-seconds').value=settings.loop.timeoutSeconds;}
+async function load(){busy(true);try{const data=await api('/api/settings');state=data.settings;revision=data.revision;models=data.models;render(state);el('location').textContent='保存先：'+data.path;if(data.catalogError){message('Codexモデル一覧の確認に失敗しました。保存できません。再読み込みしてください。',true);}else{busy(false);message('設定を読み込みました。');}}catch(e){message(e.message,true);}}
+el('codex-model').addEventListener('change',()=>codexEffort('medium'));
+el('form').addEventListener('submit',async event=>{event.preventDefault();busy(true);try{const settings={version:2,codex:{model:el('codex-model').value,effort:el('codex-effort').value},claude:{model:'opus',effort:el('claude-effort').value},loop:{maxRounds:el('max-rounds').valueAsNumber,stallLimit:el('stall-limit').valueAsNumber,timeoutSeconds:el('timeout-seconds').valueAsNumber}};const data=await api('/api/settings','PUT',{settings,revision});state=data.settings;revision=data.revision;message('保存しました。モデル・強度は次のレビューから、回数・タイムアウトは新しいループから適用されます。');}catch(e){message(e.message,true);}finally{if(!closed)busy(false);}});
+el('defaults').addEventListener('click',()=>{render(${JSON.stringify(defaults())});message('既定値を入力しました。「設定を保存」で反映します。');});
+el('reload').addEventListener('click',()=>{if(!closed)load();});
+el('close').addEventListener('click',async()=>{try{await api('/api/close','POST');sessionStorage.removeItem('revloop-token');closed=true;busy(true);el('reload').disabled=true;el('close').disabled=true;message('設定画面を終了しました。このタブを閉じてください。');}catch(e){message(e.message,true);}});
+load();
+</script></body></html>`;

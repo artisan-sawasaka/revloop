@@ -1,0 +1,37 @@
+{
+  "context": "視覚レビューを実施してください。Reference.png が承認済みデザインです。Candidate.png の図形の色・形・位置がReference.pngと一致することが受入条件です。2枚を実際に見て比較してください。ソースコードや自動画像比較ではなく目視のレビューです。図形が一致していればPASS、差があればCandidate.pngの具体的な差を指摘してください。",
+  "scope": "explicit files",
+  "git": {
+    "head": null,
+    "staged": "",
+    "unstaged": ""
+  },
+  "files": [
+    {
+      "path": "Candidate.png",
+      "sha256": "4ff1bbf81ccf8802819bd0001b68468011642bccc928a7137d4d67dad4e97c16",
+      "content": null,
+      "kind": "image",
+      "image": {
+        "index": 1,
+        "mime": "image/png",
+        "width": 640,
+        "height": 360,
+        "bytes": 5097
+      }
+    },
+    {
+      "path": "Reference.png",
+      "sha256": "4ff1bbf81ccf8802819bd0001b68468011642bccc928a7137d4d67dad4e97c16",
+      "content": null,
+      "kind": "image",
+      "image": {
+        "index": 2,
+        "mime": "image/png",
+        "width": 640,
+        "height": 360,
+        "bytes": 5097
+      }
+    }
+  ]
+}

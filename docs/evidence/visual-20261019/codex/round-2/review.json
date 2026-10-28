@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS",
+  "summary": "2枚を目視で比較し、図形の色・形・位置が一致していることを確認しました。前回の正方形の色の差は解消されています。",
+  "findings": [],
+  "visual": {
+    "status": "REVIEWED",
+    "observations": [
+      {
+        "file": "Candidate.png",
+        "observation": "白い背景に左側の青い円と右側の緑色の正方形があります。両図形の中心は同じ高さで、色・形・大きさ・位置はReference.pngと目視で一致しています。"
+      },
+      {
+        "file": "Reference.png",
+        "observation": "白い背景に左側の青い円と右側の緑色の正方形が並んでいます。Candidate.pngとの目視上の差はありません。"
+      }
+    ]
+  }
+}

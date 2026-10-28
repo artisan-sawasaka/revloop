@@ -1,0 +1,77 @@
+
+> revloop@0.1.0 test
+> npm run build && node --test test/*.test.mjs
+
+
+> revloop@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ Codex allows fresh quota + zero credits + matching unexpired user OFF confirmation (3.5957ms)
+✔ Codex fails closed without confirmation or on expiry/account change/future confirmation (0.8521ms)
+✔ Codex refuses paid credits, exhausted/expired/malformed windows, API auth and unsupported plans (0.8063ms)
+✔ Claude accepts only fresh validated Max/Opus diagnostic with credits OFF (0.456ms)
+✔ usage-screen parser rejects stale, updating, missing, conflicting, or non-diagnostic screens (2.2363ms)
+✔ rendered terminal replacements cannot be accepted by matching stale raw history (20.1636ms)
+✔ account changes between rounds are rejected even when both accounts independently allow (0.9164ms)
+✔ confirmation failure blocks actual adapter before a round or inference (437.7414ms)
+✔ legacy NEEDS_FIX run is blocked if its current billing check fails (489.3402ms)
+✔ Codex probe only reads account/limits, no inference or credit operations, no force flag (1066.3834ms)
+✔ Codex metadata stop marker prevents even the diagnostic CLI launch (4.4563ms)
+✔ FAIL -> source repair -> PASS retains reviewer ID, source chat, immutable history (385.7328ms)
+✔ unchanged FAIL stops before another model request (300.2858ms)
+✔ cyclic input and repeated findings stop loops (754.6717ms)
+✔ max rounds and BLOCKED are terminal, never PASS (374.035ms)
+✔ stop prevents further work and is visible between repairs (75.6378ms)
+✔ source drift and reviewer input tampering reject even PASS (301.5657ms)
+✔ findings cannot direct the worker outside supplied files (109.9079ms)
+✔ provider exceptions persist error and release lock (114.6647ms)
+✔ concurrent review of same run is rejected (62.2196ms)
+✔ recovery refuses live process locks (64.3368ms)
+✔ strict review contract refuses malformed results without discarding valid findings and notes (0.975ms)
+✔ PASS with required findings enters repair, retains reported verdict, and allows notes on completion (541.8239ms)
+✔ FAIL without actionable findings is BLOCKED rather than an execution error (175.4495ms)
+✔ Claude code-zero api_error is not a successful review (0.406ms)
+✔ Codex requires completed turn, valid session, and valid final JSON (0.3246ms)
+✔ argv locks down reviewer privileges on initial and resumed calls (0.2917ms)
+✔ Codex service error is shown instead of an unrelated stderr warning (0.1252ms)
+✔ scope path traversal, secrets, oversized/binary input fail closed (302.8069ms)
+✔ directory junction cannot escape review root (97.8626ms)
+✔ Git snapshot captures staged + unstaged + untracked and deletion (600.8998ms)
+✔ child process argv and UTF8 stdin survive shell metacharacters (51.3423ms)
+✔ timeouts and stop files terminate children (930.8218ms)
+✔ timeout kills the owned process tree including a grandchild (875.1013ms)
+✔ excessive provider output terminates instead of exhausting memory (375.9389ms)
+✔ subscription env refuses API key without exposing its value (0.3447ms)
+✔ desktop provider environment does not block the opposite reviewer or mutate host variables (0.2795ms)
+✔ all relevant provider routing/auth overrides remain blocked, including case variants (0.3055ms)
+✔ doctor can check only the opposite reviewer inside a desktop environment (963.6862ms)
+✔ installation writes both entrypoints and preserves existing skills (52.2608ms)
+✔ PNG/JPEG/WebP are attached as bytes and fingerprinted, never decoded as text (249.6272ms)
+✔ corrupt, mislabeled, over-dimensioned images and path escape fail closed (271.362ms)
+✔ snapshot refuses excess image count instead of dropping images (198.4481ms)
+✔ deleting a tracked image cannot silently reduce visual scope (247.556ms)
+✔ both initial and resumed requests attach all images without enabling tools (83.6181ms)
+✔ missing visual schema and incomplete observations cannot count as a visual pass (488.4629ms)
+✔ image replacement re-reviews on the same session, and source/copy tampering rejects PASS (778.8286ms)
+✔ image-mode Claude result decoder requires its visual evidence (0.7702ms)
+✔ CLI visual flag requires images and text-only PASS still reports visual NOT_RUN (871.4202ms)
+✔ PASS plus P3 findings preserves completed visual review and returns NEEDS_FIX (213.9471ms)
+✔ global install uses user home from another project without changing that project (293.9002ms)
+✔ global install rejects ambiguous targets and preserves an existing personal skill (758.9572ms)
+✔ settings default, persist and reject corruption, billing fields and stale saves (18.0805ms)
+✔ initial and resumed argv explicitly carry settings while preserving read-only controls (0.9649ms)
+✔ next review reloads global settings, keeps the session and records each round selection (455.5911ms)
+✔ GUI authenticates reads/writes, rejects foreign origin and billing overrides, persists valid settings (77.2765ms)
+✔ GUI catalog failure prevents saving instead of accepting unverified models (14.4632ms)
+✔ legacy model settings gain loop defaults without losing choices; old GUI writes are refused (11.4064ms)
+✔ loop limits reject missing, noninteger and out-of-range values (1.0506ms)
+✔ global limits reach both projects, explicit start options win, active runs keep their limits (833.6268ms)
+✔ GUI saves loop values, reloads them and rejects invalid values without changing disk (18.8041ms)
+ℹ tests 61
+ℹ suites 0
+ℹ pass 61
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7769.5459

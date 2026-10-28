@@ -1,0 +1,56 @@
+{
+  "provider": "claude",
+  "settings": {
+    "model": "opus",
+    "effort": "medium"
+  },
+  "args": [
+    "-p",
+    "--safe-mode",
+    "--restricted",
+    "--strict-mcp-config",
+    "--tools",
+    "",
+    "--permission-mode",
+    "dontAsk",
+    "--model",
+    "opus",
+    "--effort",
+    "medium",
+    "--output-format",
+    "stream-json",
+    "--json-schema",
+    "{\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"verdict\",\"summary\",\"findings\",\"visual\"],\"properties\":{\"verdict\":{\"type\":\"string\",\"enum\":[\"PASS\",\"FAIL\",\"BLOCKED\"]},\"summary\":{\"type\":\"string\"},\"findings\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"severity\",\"file\",\"line\",\"message\",\"fix\"],\"properties\":{\"severity\":{\"type\":\"string\",\"enum\":[\"P0\",\"P1\",\"P2\",\"P3\"]},\"file\":{\"type\":\"string\"},\"line\":{\"type\":\"integer\",\"minimum\":0},\"message\":{\"type\":\"string\"},\"fix\":{\"type\":\"string\"}}}},\"visual\":{\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"status\",\"observations\"],\"properties\":{\"status\":{\"type\":\"string\",\"enum\":[\"REVIEWED\",\"NOT_RUN\"]},\"observations\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"file\",\"observation\"],\"properties\":{\"file\":{\"type\":\"string\"},\"observation\":{\"type\":\"string\"}}}}}}}}",
+    "--input-format",
+    "stream-json",
+    "--verbose",
+    "--name",
+    "revloop 画像添付の実機検証 claude"
+  ],
+  "cwd": "C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-JRdjeo",
+  "images": [
+    {
+      "path": "Candidate.png",
+      "sha256": "f678e4ccdc06c0be13eef0eb8ec0ccd5480f8affdde09fdc7b5380a0e911f17e",
+      "image": {
+        "index": 1,
+        "mime": "image/png",
+        "width": 640,
+        "height": 360,
+        "bytes": 5096
+      }
+    },
+    {
+      "path": "Reference.png",
+      "sha256": "4ff1bbf81ccf8802819bd0001b68468011642bccc928a7137d4d67dad4e97c16",
+      "image": {
+        "index": 2,
+        "mime": "image/png",
+        "width": 640,
+        "height": 360,
+        "bytes": 5097
+      }
+    }
+  ],
+  "imageTransport": "stream-json image blocks"
+}

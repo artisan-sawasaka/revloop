@@ -1,0 +1,41 @@
+{
+  "settings": {
+    "version": 2,
+    "codex": {
+      "model": "gpt-6-astra",
+      "effort": "medium"
+    },
+    "claude": {
+      "model": "opus",
+      "effort": "medium"
+    },
+    "loop": {
+      "maxRounds": 8,
+      "stallLimit": 3,
+      "timeoutSeconds": 600
+    }
+  },
+  "runs": [
+    {
+      "root": "C:\\work\\revloop\\scratch\\loop-gui-B0QXjl\\codex",
+      "id": "ea1cf721-9a5c-4ef6-b6f4-579b8a7da772",
+      "source": "codex",
+      "maxRounds": 8,
+      "stallLimit": 3,
+      "timeoutMs": 600000,
+      "status": "READY",
+      "reviewerInvocations": 0
+    },
+    {
+      "root": "C:\\work\\revloop\\scratch\\loop-gui-B0QXjl\\claude",
+      "id": "34c58dc0-52e5-4dc5-aecb-750ba60f9a3d",
+      "source": "claude",
+      "maxRounds": 8,
+      "stallLimit": 3,
+      "timeoutMs": 600000,
+      "status": "READY",
+      "reviewerInvocations": 0
+    }
+  ],
+  "inference": "NOT RUN"
+}

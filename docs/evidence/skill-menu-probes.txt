@@ -1,0 +1,16 @@
+2026-10-18 Windows ConPTY, project C:\work\revloop
+
+Codex CLI 0.153.4:
+  Typed $revloop after installing .agents/skills/revloop/SKILL.md.
+  Observed completion: revloop [Skill] Run iterative reviews with Claude Code ...
+  Enter inserted the skill mention. No model request submitted in this menu probe.
+  Plain /revloop had separately returned Unrecognized command (codex-slash-probe.txt).
+
+Claude Code 2.1.302:
+  Typed /revloop after installing .claude/skills/revloop/SKILL.md.
+  Observed completion: /revloop Run iterative reviews with Codex while repairing findings ...
+  No model request submitted in this menu probe.
+
+Claude reviewer naming:
+  Own live test session 5adb40a7-3620-450b-a4fc-8896b71a05cf transcript:
+  {"type":"custom-title","customTitle":"revloop-live-claude","sessionId":"5adb40a7-3620-450b-a4fc-8896b71a05cf"}

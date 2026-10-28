@@ -1,0 +1,131 @@
+[
+  {
+    "reviewer": "codex",
+    "root": "C:\\work\\revloop\\scratch\\visual-live-8oeSRA\\codex",
+    "id": "fa817814-6a8a-4db3-8411-995c1f185dc3",
+    "status": "PASS",
+    "rounds": [
+      {
+        "number": 1,
+        "verdict": "FAIL",
+        "sessionId": "01a151c8-59f0-7133-a941-e88c2084d07a",
+        "visualReview": {
+          "status": "REVIEWED",
+          "images": [
+            "Candidate.png",
+            "Reference.png"
+          ]
+        },
+        "observations": [
+          {
+            "file": "Candidate.png",
+            "observation": "白い背景に左側の青い円と右側のオレンジ色の正方形があります。両図形の形・大きさ・位置はReference.pngと目視で一致していますが、正方形の色が異なります。"
+          },
+          {
+            "file": "Reference.png",
+            "observation": "白い背景に左側の青い円と右側の緑色の正方形があり、両図形の中心は同じ高さに並んでいます。"
+          }
+        ],
+        "imageTransport": "--image",
+        "settings": {
+          "model": "gpt-6-astra",
+          "effort": "medium"
+        },
+        "billing": "ALLOW"
+      },
+      {
+        "number": 2,
+        "verdict": "PASS",
+        "sessionId": "01a151c8-59f0-7133-a941-e88c2084d07a",
+        "visualReview": {
+          "status": "REVIEWED",
+          "images": [
+            "Candidate.png",
+            "Reference.png"
+          ]
+        },
+        "observations": [
+          {
+            "file": "Candidate.png",
+            "observation": "白い背景に左側の青い円と右側の緑色の正方形があります。両図形の中心は同じ高さで、色・形・大きさ・位置はReference.pngと目視で一致しています。"
+          },
+          {
+            "file": "Reference.png",
+            "observation": "白い背景に左側の青い円と右側の緑色の正方形が並んでいます。Candidate.pngとの目視上の差はありません。"
+          }
+        ],
+        "imageTransport": "--image",
+        "settings": {
+          "model": "gpt-6-astra",
+          "effort": "medium"
+        },
+        "billing": "ALLOW"
+      }
+    ]
+  },
+  {
+    "reviewer": "claude",
+    "root": "C:\\work\\revloop\\scratch\\visual-live-8oeSRA\\claude",
+    "id": "aa07ab7f-a514-46dc-9754-42b4f8ff738e",
+    "failedTransportRun": "e0d291a1-02fe-449d-9c4b-12776cfac5f5",
+    "status": "PASS",
+    "rounds": [
+      {
+        "number": 1,
+        "verdict": "FAIL",
+        "sessionId": "55474dae-811b-400e-9bcb-79de39b39202",
+        "visualReview": {
+          "status": "REVIEWED",
+          "images": [
+            "Candidate.png",
+            "Reference.png"
+          ]
+        },
+        "observations": [
+          {
+            "file": "Candidate.png",
+            "observation": "640x360の白い背景です。左側に青（#105BC8前後）の円があり、中心はおおよそ(170,180)、半径は約65pxです。右側にオレンジの正方形があり、範囲はおおよそx=390〜500, y=125〜235です。Reference.pngと比べると、正方形の色だけが違います。"
+          },
+          {
+            "file": "Reference.png",
+            "observation": "640x360の白い背景です。左側に青の円があり、中心はおおよそ(170,180)、半径は約65pxで、Candidate.pngと同じです。右側に緑の正方形があり、範囲はおおよそx=390〜500, y=125〜235です。"
+          }
+        ],
+        "imageTransport": "stream-json image blocks",
+        "settings": {
+          "model": "opus",
+          "effort": "medium"
+        },
+        "billing": "ALLOW"
+      },
+      {
+        "number": 2,
+        "verdict": "PASS",
+        "sessionId": "55474dae-811b-400e-9bcb-79de39b39202",
+        "visualReview": {
+          "status": "REVIEWED",
+          "images": [
+            "Candidate.png",
+            "Reference.png"
+          ]
+        },
+        "observations": [
+          {
+            "file": "Candidate.png",
+            "observation": "640x360の白い背景です。左側に青（#105BC8前後）の円があり、中心はおおよそ(170,180)、半径は約65pxです。右側に緑（#1A9A4E前後）の正方形があり、範囲はおおよそx=390〜500, y=125〜235です。前回はオレンジだった正方形が緑になり、Reference.pngと見た目で違いはありません。"
+          },
+          {
+            "file": "Reference.png",
+            "observation": "640x360の白い背景です。左側に青い円があり、中心はおおよそ(170,180)、半径は約65pxです。右側に緑の正方形があり、範囲はおおよそx=390〜500, y=125〜235です。Candidate.pngの図形と色・形・位置が一致しています。"
+          }
+        ],
+        "imageTransport": "stream-json image blocks",
+        "settings": {
+          "model": "opus",
+          "effort": "medium"
+        },
+        "billing": "ALLOW"
+      }
+    ]
+  }
+]

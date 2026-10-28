@@ -1,0 +1,43 @@
+{
+  "mode": "OFFLINE_REASSESSMENT_ONLY",
+  "originalRun": "1d12b7ae-c04e-4970-be6b-db5cb26aafe5",
+  "reviewerSession": "ac8bb1b5-4f17-4ac7-a274-98fefafc1e9e",
+  "originalStatus": "ERROR",
+  "originalVisualStatus": "NOT_RUN",
+  "decision": {
+    "reportedVerdict": "PASS",
+    "effectiveVerdict": "FAIL",
+    "warnings": [
+      "PASS_WITH_REQUIRED_FINDINGS: required findings remain; treated as FAIL for repair, not an execution ERROR. Non-blocking suggestions belong in notes."
+    ]
+  },
+  "applicableStatus": "NEEDS_FIX",
+  "visualReview": {
+    "status": "REVIEWED",
+    "images": [
+      "Work/ArtSource/Characters/CHR_EMPEROR/Visual-v001/ADV/emperor_e0_m0.png",
+      "Work/ArtSource/Characters/CHR_EMPEROR/Visual-v001/FourViews/back.png",
+      "Work/ArtSource/Characters/CHR_EMPEROR/Visual-v001/FourViews/emperor_four_views.png",
+      "Work/ArtSource/Characters/CHR_EMPEROR/Visual-v001/FourViews/front.png",
+      "Work/ArtSource/Characters/CHR_EMPEROR/Visual-v001/FourViews/left.png",
+      "Work/ArtSource/Characters/CHR_EMPEROR/Visual-v001/FourViews/right.png",
+      "Work/ArtSource/Characters/CHR_EMPEROR/Visual-v001/References/emperor-b.png",
+      "Work/Evidence/Art/20261019-emperor-visual/adv-green.png"
+    ]
+  },
+  "findingCount": 2,
+  "notes": [],
+  "integrity": {
+    "snapshotSha256": "20951f74fc80dce6d45aa2c0f45fca4e1077473479ef7cc2868a0e877e7a1aad",
+    "stdoutSha256": "057d3651966c77c201595b83a188afc99ecf72128e056f5697855b2f9ed09aaf",
+    "stateSha256": "8afbccee3164237d11be5ed68a8bde3630456e947a6051e57ceaf51b3bb61175",
+    "archiveImages": "8/8 hash matches",
+    "findingPaths": "2/2 in scope"
+  },
+  "limitations": [
+    "Reassesses the archived snapshot, not current Der assets",
+    "No new model call or independent visual review",
+    "No finding was repaired or dismissed",
+    "Original run, raw response, Der rules and adoption state are unchanged"
+  ]
+}

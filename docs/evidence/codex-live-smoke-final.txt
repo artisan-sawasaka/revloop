@@ -1,0 +1,5 @@
+{"root":"C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-live-codex-Cy59DM","run":"20c9903d-499b-4fbb-9f68-01e005bdac04","phase":"review-bug"}
+{"status":"NEEDS_FIX","review":{"verdict":"FAIL","summary":"add が加算ではなく減算を行っています。","findings":[{"severity":"P1","file":"calc.ts","line":1,"message":"return a - b は差を返すため、2つの数の算術和を返す要件を満たしません。例えば add(2, 3) は期待値 5 ではなく -1 を返します。","fix":"return a + b; に変更してください。"}]}}
+{"phase":"review-fix","status":"PASS","review":{"verdict":"PASS","summary":"add は a + b を返しており、算術和を返す純粋関数の要件を満たしています。テストは実行していません。","findings":[]},"sessionId":"01a14c90-15be-7ee0-b77e-25be09a90634"}
+{"name":"revloop-live-codex","titleMatches":true}
+{"history":"C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-live-codex-Cy59DM\\.revloop\\runs\\20c9903d-499b-4fbb-9f68-01e005bdac04"}

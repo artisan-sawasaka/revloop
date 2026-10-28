@@ -1,0 +1,21 @@
+{
+  "context": "要件: applyDiscount(price, percent) は割引後の価格を返す。対象入力は有限の非負priceと0以上100以下のpercentに限定する。入力範囲外の検証や通貨丸めは今回の対象外。例: (100,20)=>80, (250,0)=>250, (80,100)=>0。discount.tsとdiscount.test.mjsだけがレビュー対象。初回レビュー前の修正は禁止。元デスクトップチャットがFAIL後に修正し同じrunを再レビューする。\n検証状況: 準備時点でテスト未実行。\n",
+  "scope": "explicit files",
+  "git": {
+    "head": null,
+    "staged": "",
+    "unstaged": ""
+  },
+  "files": [
+    {
+      "path": "discount.test.mjs",
+      "sha256": "f5e53f194702ca9a66af6a93b33d616039991720df3d903161a3a44db284b2df",
+      "content": "import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport { applyDiscount } from './discount.ts';\ntest('20 percent off 100 is 80',()=>assert.equal(applyDiscount(100,20),80));\ntest('zero percent preserves price',()=>assert.equal(applyDiscount(250,0),250));\ntest('100 percent off is zero',()=>assert.equal(applyDiscount(80,100),0));\n"
+    },
+    {
+      "path": "discount.ts",
+      "sha256": "a4d1f6ccb91f1fd23aa1de9d767cfa5bfa1d28a46e15ef5c6f78087affedb602",
+      "content": "export function applyDiscount(price: number, percent: number): number { return price * percent / 100; }\n"
+    }
+  ]
+}

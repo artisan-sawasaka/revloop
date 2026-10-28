@@ -1,0 +1,3 @@
+multi_agent                              stable             true
+shell_tool                               stable             true
+unified_exec                             stable             true

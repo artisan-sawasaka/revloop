@@ -1,0 +1,15 @@
+✔ zero credits and available subscription quota never imply no-credit execution (1.5678ms)
+✔ missing, malformed, and misleading billing evidence always blocks (0.2924ms)
+✔ quota exhaustion and credits available are separately reported (0.1287ms)
+✔ real reviewer is blocked before a round and before Claude CLI is spawned (71.552ms)
+✔ existing NEEDS_FIX runs do not bypass the new billing gate (165.1893ms)
+✔ Codex billing RPC only reads limits, never starts inference; CLI override is rejected (376.4106ms)
+✔ CLI review with a missing provider executable still stops as BLOCKED without inference (127.5104ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 812.7545

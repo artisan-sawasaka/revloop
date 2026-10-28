@@ -1,0 +1,20 @@
+{
+  "root": "C:\\work\\revloop\\scratch\\sol61-live-PZFlKG",
+  "id": "48fa6402-e0a7-4a21-aff2-2fdb2403bea7",
+  "settings": {
+    "version": 2,
+    "codex": {
+      "model": "gpt-6.1-sol",
+      "effort": "medium"
+    },
+    "claude": {
+      "model": "opus",
+      "effort": "medium"
+    },
+    "loop": {
+      "maxRounds": 5,
+      "stallLimit": 2,
+      "timeoutSeconds": 300
+    }
+  }
+}

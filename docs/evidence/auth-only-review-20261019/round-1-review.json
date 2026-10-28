@@ -1,0 +1,26 @@
+{
+  "verdict": "FAIL",
+  "summary": "Claudeの本番レビュー経路は受入条件をほぼ満たしています。対象は初回レビュー・推論直前のbilling-check・再開レビューで、いずれもauth status（Claude CLIの認証状態確認）、--version、--help、-pの4種類だけを呼び、TTY /usageは起動しません。policyはsubscription-auth-onlyで、paidUsageDisabledはnull、warningsも出力されます。APIキー等の競合変数・非サブスク認証・古い認証情報・アカウント変更はBLOCKEDのままで、Codexのガードも変更されていません。一方で、今回の方針に反する説明が2か所残っています。1つはCLIの出力（READY時のnextAction）、もう1つはBILLING_SAFETY.mdで現行の内容と履歴の区別が不明確な点です。このため、受入条件2・6を満たしていません。",
+  "findings": [
+    {
+      "severity": "P3",
+      "file": "src/cli.ts",
+      "line": 42,
+      "message": "publicStateのnextActionが、READY状態で全レビュアー共通に『Mandatory billing-check precedes review. No model runs when no-credit safety is unverified.』を返しています。Claudeレビュアーは課金されないことを確認しないまま推論を許可する方針に変わったため、Claudeの場合この文は事実と異なります。受入条件2の『truthful warnings』に反します。",
+      "fix": "s.reviewer==='claude'のときは、『サブスク認証（claude.ai / firstParty / Max、同一アカウント）を確認してから推論する。残量と追加利用OFFは未確認のため、Claude側で追加利用OFFを維持する必要がある』という趣旨の文言に分けてください。Codexのときは従来の文言を残してください。"
+    },
+    {
+      "severity": "P2",
+      "file": "docs/BILLING_SAFETY.md",
+      "line": 15,
+      "message": "『## 以前の方式と検証履歴』の後に続く『判定条件』『Codexの自動補充OFFの確認』『実行フロー』『対応範囲と限界』などが、すべて同じ見出しレベル（##）で並んでいます。そのため、どこまでが履歴でどこからが現行仕様か判別できません。さらに、冒頭の『以下の…記録は履歴』という一文は、現在も有効なCodex確認手順まで履歴扱いにしてしまっています。逆に『実行フロー』の『各ラウンド前に生の残量情報を再取得』『Claudeの対話診断は…起動フォルダで行う』、『対応範囲と限界』の『Claudeの他CLIバージョンは確認不能として停止』は、現行の動作と矛盾したまま現行仕様のように読めます。READMEはこの文書を『現在の確認条件』としてリンクしているため、受入条件6（GUI・ドキュメントが新方針を正確に説明すること、履歴は明示的に区別すること）を満たしていません。",
+      "fix": "現行仕様として有効な内容（Codexの判定条件と自動補充OFF確認の手順、Claudeは認証確認のみという実行フロー）を『現在の方針』の配下へ移してください。/usage必須方式の判定表・Claudeの対話診断・Claude CLIのバージョン制限・2026-10-18の検証結果は『以前の方式と検証履歴』の下位見出し（###）にまとめ、現在の保証ではないと明記してください。実行フローの手順2も、Claudeは認証とアカウント照合のみ、Codexは残量を再取得、と書き分けてください。"
+    }
+  ],
+  "notes": [
+    "READMEの『検証と今後』に残る『Claudeの診断にはnode-ptyのネイティブConPTY部品とxterm/headlessを使う』は、EXE化の検討事項として書かれています。今回の変更で本番経路からは外れたため、旧診断用のみと補足すると誤解が減ります（任意）。",
+    "assessClaudeSubscriptionは、内部でassessBilling('claude', undefined)を呼んだ後にreasonsを空にし直す実装です。動作は正しいものの、旧評価関数の初期値（reasons等）に依存しているので、専用の初期化に分けると保守しやすくなります（任意）。",
+    "実行ガードのBillingReport.modelがClaudeの'opus'に固定されています。Max以外のプランやOpus以外のモデルへの拡張は要求されていないため、現状のままで問題ありません。",
+    "テストは実行していません。本レビューは提供されたスナップショットの静的確認だけに基づいています。"
+  ]
+}

@@ -1,0 +1,85 @@
+
+> revloop@0.1.0 test
+> npm run build && node --test test/*.test.mjs
+
+
+> revloop@0.1.0 build
+> tsc -p tsconfig.json
+
+✔ Codex allows fresh quota + zero credits + matching unexpired user OFF confirmation (3.6656ms)
+✔ Codex fails closed without confirmation or on expiry/account change/future confirmation (0.6753ms)
+✔ Codex refuses paid credits, exhausted/expired/malformed windows, API auth and unsupported plans (0.8825ms)
+✔ historical Claude usage evidence is still assessed without rewriting old guarantees (0.4853ms)
+✔ Claude auth-only policy does not require quota or assert paid usage is disabled (1.0721ms)
+✔ Claude review uses auth status without invoking /usage, while API auth remains blocked (1705.6479ms)
+✔ usage-screen parser rejects stale, updating, missing, conflicting, or non-diagnostic screens (1.2249ms)
+✔ rendered terminal replacements cannot be accepted by matching stale raw history (21.7818ms)
+✔ account changes between rounds are rejected even when both accounts independently allow (0.9811ms)
+✔ confirmation failure blocks actual adapter before a round or inference (404.4741ms)
+✔ legacy NEEDS_FIX run is blocked if its current billing check fails (510.4201ms)
+✔ Codex probe only reads account/limits, no inference or credit operations, no force flag (1137.1131ms)
+✔ Codex metadata stop marker prevents even the diagnostic CLI launch (2.7678ms)
+✔ FAIL -> source repair -> PASS retains reviewer ID, source chat, immutable history (434.0791ms)
+✔ unchanged FAIL stops before another model request (326.3886ms)
+✔ cyclic input and repeated findings stop loops (825.5674ms)
+✔ max rounds and BLOCKED are terminal, never PASS (430.1008ms)
+✔ stop prevents further work and is visible between repairs (89.6774ms)
+✔ source drift and reviewer input tampering reject even PASS (386.467ms)
+✔ findings cannot direct the worker outside supplied files (150.3534ms)
+✔ provider exceptions persist error and release lock (150.5463ms)
+✔ concurrent review of same run is rejected (75.4128ms)
+✔ recovery refuses live process locks (71.3393ms)
+✔ strict review contract refuses malformed results without discarding valid findings and notes (2.118ms)
+✔ PASS with required findings enters repair, retains reported verdict, and allows notes on completion (699.431ms)
+✔ FAIL without actionable findings is BLOCKED rather than an execution error (206.3579ms)
+✔ Claude code-zero api_error is not a successful review (0.469ms)
+✔ Codex requires completed turn, valid session, and valid final JSON (0.3819ms)
+✔ argv locks down reviewer privileges on initial and resumed calls (0.3194ms)
+✔ Codex service error is shown instead of an unrelated stderr warning (0.1221ms)
+✔ scope path traversal, secrets, oversized/binary input fail closed (330.7377ms)
+✔ directory junction cannot escape review root (106.8995ms)
+✔ Git snapshot captures staged + unstaged + untracked and deletion (652.4649ms)
+✔ child process argv and UTF8 stdin survive shell metacharacters (56.8476ms)
+✔ timeouts and stop files terminate children (715.9092ms)
+✔ timeout kills the owned process tree including a grandchild (884.6136ms)
+✔ excessive provider output terminates instead of exhausting memory (391.194ms)
+✔ subscription env refuses API key without exposing its value (0.364ms)
+✔ desktop provider environment does not block the opposite reviewer or mutate host variables (0.1626ms)
+✔ all relevant provider routing/auth overrides remain blocked, including case variants (0.2185ms)
+✔ doctor can check only the opposite reviewer inside a desktop environment (1212.6583ms)
+✔ installation writes both entrypoints and preserves existing skills (63.416ms)
+✔ BLOCKED hands caller the reviewer reason and persisted diagnostic paths (558.6982ms)
+✔ idle stop records a custom reason and cannot later change PASS to STOPPED (345.1313ms)
+✔ active stop returns a request log and owner preserves reason on completion (180.0264ms)
+✔ limits, stagnation and process errors always save a specific reason (1177.9685ms)
+✔ billing failure before first round returns diagnostic reasons without inference (747.5466ms)
+✔ CLI stop accepts reason and legacy halt statuses get a reason without fabricated log paths (415.7835ms)
+✔ PNG/JPEG/WebP are attached as bytes and fingerprinted, never decoded as text (268.6927ms)
+✔ corrupt, mislabeled, over-dimensioned images and path escape fail closed (305.8452ms)
+✔ snapshot refuses excess image count instead of dropping images (217.8835ms)
+✔ deleting a tracked image cannot silently reduce visual scope (268.1768ms)
+✔ both initial and resumed requests attach all images without enabling tools (92.6009ms)
+✔ missing visual schema and incomplete observations cannot count as a visual pass (543.1167ms)
+✔ image replacement re-reviews on the same session, and source/copy tampering rejects PASS (944.9351ms)
+✔ image-mode Claude result decoder requires its visual evidence (0.7907ms)
+✔ CLI visual flag requires images and text-only PASS still reports visual NOT_RUN (1112.3142ms)
+✔ PASS plus P3 findings preserves completed visual review and returns NEEDS_FIX (228.7254ms)
+✔ global install uses user home from another project without changing that project (331.347ms)
+✔ global install rejects ambiguous targets and preserves an existing personal skill (844.6806ms)
+✔ settings default, persist and reject corruption, billing fields and stale saves (16.811ms)
+✔ initial and resumed argv explicitly carry settings while preserving read-only controls (0.7287ms)
+✔ next review reloads global settings, keeps the session and records each round selection (529.3239ms)
+✔ GUI authenticates reads/writes, rejects foreign origin and billing overrides, persists valid settings (90.184ms)
+✔ GUI catalog failure prevents saving instead of accepting unverified models (17.648ms)
+✔ legacy model settings gain loop defaults without losing choices; old GUI writes are refused (11.0815ms)
+✔ loop limits reject missing, noninteger and out-of-range values (1.5424ms)
+✔ global limits reach both projects, explicit start options win, active runs keep their limits (936.3955ms)
+✔ GUI saves loop values, reloads them and rejects invalid values without changing disk (19.1921ms)
+ℹ tests 69
+ℹ suites 0
+ℹ pass 69
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8543.1399

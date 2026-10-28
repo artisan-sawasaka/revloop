@@ -1,0 +1,26 @@
+[
+  {
+    "Path": "C:\\work\\revloop\\src\\settings.ts",
+    "Hash": "E4E4E240A9EA04A360ECBF696A742C777541317C17B5578B54B3F7319EDDF8E4"
+  },
+  {
+    "Path": "C:\\work\\revloop\\src\\settings-page.ts",
+    "Hash": "C72BE5F1C0B7FD4AB5E46DB663C2F3FEF4C6F2C4D01B74368B05A4B7C81E6C8C"
+  },
+  {
+    "Path": "C:\\work\\revloop\\src\\settings-server.ts",
+    "Hash": "93C2D23998BB27CB999EB024DB9AB20123FDE6FCC0EC0F0B182173D5D7CEF2CA"
+  },
+  {
+    "Path": "C:\\work\\revloop\\src\\providers.ts",
+    "Hash": "D21885864BD4A4A15FE197534BBB315DAC831D5EA3269CBF2BD144A9DCA4E500"
+  },
+  {
+    "Path": "C:\\work\\revloop\\src\\engine.ts",
+    "Hash": "11D3FB3F0D09CBCD014F3540D31E822777B9CCF85B9BC4B506A1240F6C5BD1DF"
+  },
+  {
+    "Path": "C:\\work\\revloop\\src\\cli.ts",
+    "Hash": "49130CD2327C890F43390557C3E2137F28C829C25506ECD86A7F42E3FC88D8C6"
+  }
+]

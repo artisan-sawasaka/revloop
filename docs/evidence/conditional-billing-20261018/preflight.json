@@ -1,0 +1,53 @@
+[
+  {
+    "policy": "included-subscription-only",
+    "provider": "codex",
+    "checkedAt": "2026-10-18T08:10:05.625Z",
+    "status": "ALLOW",
+    "modelExecutionAllowed": true,
+    "accountFingerprint": "7cb7fceab3879eff0f14391dc8117cda87fa55bbf8a4cf804f2395596890042a",
+    "plan": "prolite",
+    "model": null,
+    "evidence": [
+      "codex-account-read",
+      "codex-rate-limits",
+      "user-confirmed-auto-reload-off"
+    ],
+    "reasons": [],
+    "observations": {
+      "quotaUsedPercent": [
+        19
+      ],
+      "creditBalance": "0",
+      "hasCredits": false,
+      "autoReloadEnabled": false,
+      "paidUsageDisabled": true
+    },
+    "confirmationExpiresAt": "2026-10-19T08:10:04.285Z"
+  },
+  {
+    "policy": "included-subscription-only",
+    "provider": "claude",
+    "checkedAt": "2026-10-18T08:10:11.762Z",
+    "status": "ALLOW",
+    "modelExecutionAllowed": true,
+    "accountFingerprint": "ee9f147dc6549225def76f5aace8d4a2c5920c256638d5bd5a7bda4d39ee7a30",
+    "plan": "max",
+    "model": "opus",
+    "evidence": [
+      "claude-auth-status",
+      "claude-usage-tty"
+    ],
+    "reasons": [],
+    "observations": {
+      "quotaUsedPercent": [
+        0,
+        7
+      ],
+      "creditBalance": null,
+      "hasCredits": null,
+      "autoReloadEnabled": null,
+      "paidUsageDisabled": true
+    }
+  }
+]

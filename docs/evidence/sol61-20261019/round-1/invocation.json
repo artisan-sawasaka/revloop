@@ -1,0 +1,36 @@
+{
+  "provider": "codex",
+  "settings": {
+    "model": "gpt-6.1-sol",
+    "effort": "medium"
+  },
+  "args": [
+    "-a",
+    "never",
+    "-c",
+    "web_search=\"disabled\"",
+    "exec",
+    "--ignore-user-config",
+    "--ignore-rules",
+    "--sandbox",
+    "read-only",
+    "--skip-git-repo-check",
+    "--disable",
+    "shell_tool",
+    "--disable",
+    "unified_exec",
+    "--disable",
+    "multi_agent",
+    "--disable",
+    "multi_agent_v2",
+    "--model",
+    "gpt-6.1-sol",
+    "-c",
+    "model_reasoning_effort=\"medium\"",
+    "--json",
+    "--output-schema",
+    "C:\\work\\revloop\\scratch\\sol61-live-PZFlKG\\.revloop\\runs\\48fa6402-e0a7-4a21-aff2-2fdb2403bea7\\round-1\\schema.json",
+    "-"
+  ],
+  "cwd": "C:\\Users\\sawas\\AppData\\Local\\Temp\\revloop-ywEHMv"
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "round": 1,
+    "sessionId": "54cdbfb8-de8c-4485-abf3-70d3e3d7d5ba",
+    "fastMode": "off",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "isError": false
+  },
+  {
+    "round": 2,
+    "sessionId": "54cdbfb8-de8c-4485-abf3-70d3e3d7d5ba",
+    "fastMode": "off",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "isError": false
+  }
+]

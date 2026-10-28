@@ -1,0 +1,20 @@
+{
+  "verdict": "FAIL",
+  "summary": "discount.ts の applyDiscount は割引後の価格ではなく割引額（price * percent / 100）を返しており、要件を満たしていません。要件の例3件のうち、(100,20)=>80 は 20、(250,0)=>250 は 0、(80,100)=>0 は 80 となり、いずれも一致しません。テストの期待値は要件どおりなので、実装を直せば通るはずです。なお、テストは実行しておらず、この結論はコードを読んで判断したものです。",
+  "findings": [
+    {
+      "severity": "P0",
+      "file": "discount.ts",
+      "line": 1,
+      "message": "applyDiscount が割引後の価格ではなく割引額（price * percent / 100）を返しています。そのため要件の例 (100,20)=>80、(250,0)=>250、(80,100)=>0 がすべて不一致になり、discount.test.mjs の3テストもすべて失敗すると見込まれます。",
+      "fix": "戻り値を `price * (100 - percent) / 100` に変えてください（`price - price * percent / 100` でも同じです）。"
+    },
+    {
+      "severity": "P3",
+      "file": "discount.test.mjs",
+      "line": 3,
+      "message": ".mjs から './discount.ts' を直接 import しているため、Node が TypeScript を実行できる必要があります。型注釈を取り除いて実行する type stripping が既定で有効な Node 23.6 以降、または Node 22.6 以降で --experimental-strip-types を付けた場合です。それより古い環境ではテストを読み込めません。",
+      "fix": "実行に使う Node のバージョンを決めておくか、テスト実行コマンドに --experimental-strip-types を明記してください。"
+    }
+  ]
+}

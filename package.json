@@ -1,0 +1,35 @@
+{
+  "name": "revloop",
+  "version": "0.1.0",
+  "description": "Session-preserving Claude Code / Codex review loops for Windows",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "revloop": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "docs/RESEARCH.md",
+    "docs/VALIDATION.md",
+    "docs/DESKTOP_VALIDATION.md",
+    "docs/BILLING_SAFETY.md"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "start": "node dist/cli.js"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "typescript": "7.0.2"
+  },
+  "dependencies": {
+    "@xterm/headless": "6.0.0",
+    "node-pty": "1.1.0",
+    "sharp": "0.35.5"
+  }
+}
